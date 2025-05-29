@@ -1,0 +1,42 @@
+@import "../../styles/variables.less";
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  position: relative;
+  background: linear-gradient(135deg, @sidebar-gradient-start 0%, @sidebar-gradient-end 100%);
+  padding: 20px;
+  box-sizing: border-box;
+  border-right: 1px solid @border-light;
+
+  &-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    &-item {
+      position: relative;
+      margin: @spacing-xs @spacing-sm;
+      padding: @spacing-sm @spacing-base;
+      border-radius: @border-radius-base;
+      color: @theme-primary;
+      font-weight: @font-weight-regular;
+      transition: @transition-all;
+      cursor: pointer;
+
+      &:hover {
+        background-color: @hover-light;
+        color: @theme-secondary;
+        transform: translateX(4px);
+      }
+
+      &.active {
+        background-color: @active-bg;
+        color: @active-text;
+        font-weight: @font-weight-medium;
+        transform: none;
+        box-shadow: @shadow-md;
+      }
+    }
+  }
+}

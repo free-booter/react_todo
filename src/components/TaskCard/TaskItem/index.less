@@ -1,0 +1,44 @@
+.task-item {
+    .status-card-mixin();
+    border-radius: @border-radius-xl;
+    &__header {
+      display: flex;
+    }
+    &__flag {
+        margin-right: auto;
+      &.todo {
+        color: @danger;
+      }
+    }
+    &__content {
+      margin: 15px 0;
+      .task-item__title {
+        margin-bottom: 10px;
+        color: @text-primary;
+        font-size: @font-size-xl;
+        font-weight: bold;
+      }
+      .task-item__description {
+        color: @text-secondary;
+        font-size: @font-size-sm;
+        line-height: @line-height-base;
+        //  超出3行
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+    }
+    &__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    &__date {
+      display: flex;
+      align-items: center;
+      color: @text-tertiary;
+      font-size: @font-size-sm;
+    }
+  }

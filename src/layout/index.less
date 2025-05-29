@@ -1,0 +1,36 @@
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: #F7F9FC;
+
+  .layout-content {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    background: #F7F9FC;
+
+    .content-container {
+      flex: 1;
+      padding: @spacing-lg;
+      position: relative;
+
+      // 内容区域的卡片样式
+      .content-card {
+        background: #FFFFFF;
+        border-radius: @border-radius-base;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+        padding: @spacing-lg;
+        transition: @transition-all;
+        border: 1px solid #F0F0F0;
+        
+        &:hover {
+          box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+                     0 6px 16px 0 rgba(0, 0, 0, 0.08),
+                     0 9px 28px 8px rgba(0, 0, 0, 0.05);
+        }
+      }
+    }
+  }
+}

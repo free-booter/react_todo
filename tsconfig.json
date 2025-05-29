@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    // 目标
+    "target": "ES2020",
+    // 使用defineForClassFields
+    "useDefineForClassFields": true,
+    // 模块
+    "module": "ESNext",
+    // 模块解析
+    "moduleResolution": "bundler",
+    // 严格模式
+    "strict": true,
+    // 使用react-jsx
+    "jsx": "react-jsx",
+    // 跳过库检查
+    "skipLibCheck": true,
+    // 生成sourceMap
+    "sourceMap": true,
+    // 解析json模块
+    "resolveJsonModule": true,
+    // 隔离模块
+    "isolatedModules": true,
+    // 允许导入es模块
+    "esModuleInterop": true,
+    // 库
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    // 允许导入ts扩展
+    "allowImportingTsExtensions": true,
+    // 不生成文件
+    "noEmit": true,
+     // 设置types路径
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["vite-plugin-svg-icons/client"],
+    // 添加路径别名配置
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    // Linting options
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  // TypeScript文件应该进行类型检查
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src"],
+}

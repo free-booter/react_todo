@@ -1,0 +1,156 @@
+// 主题色系统
+@theme-primary: #6200EA;    // 主色调：深紫色
+@theme-secondary: #7E3FF2;  // 次要色：中紫色
+@theme-light: #F4EEFF;     // 浅色调：淡紫色
+
+// 背景色系统
+@bg-primary: #FFFFFF;       // 主背景色：纯白
+@bg-secondary: #F7F9FC;    // 次背景色：浅灰蓝
+@bg-tertiary: #EDF2F7;     // 第三背景色：中灰蓝
+
+// 渐变背景色系统
+@gradient-start: #F8F7FF;   // 渐变开始色（非常浅的紫色）
+@gradient-middle: #F4F1FF;  // 渐变中间色（浅紫色）
+@gradient-end: #F0EBFF;     // 渐变结束色（稍深的浅紫色）
+
+// 头部渐变色
+@header-gradient-start: @gradient-start;
+@header-gradient-end: @gradient-middle;
+
+// 侧边栏渐变色
+@sidebar-gradient-start: @gradient-middle;
+@sidebar-gradient-end: @gradient-end;
+
+// 交互状态
+@hover-light: rgba(98, 0, 234, 0.08);    // 浅色背景悬浮
+@hover-dark: rgba(98, 0, 234, 0.15);     // 深色背景悬浮
+@active-bg: #6200EA;                     // 选中背景
+@active-text: #FFFFFF;                    // 选中文字
+
+// 功能色 Functional Colors
+@success: #10B981;    // 成功色：翠绿
+@warning: #F59E0B;    // 警告色：橙色
+@danger: #EF4444;     // 危险色：红色
+@info: #3B82F6;       // 信息色：蓝色
+
+// 任务卡片背景色
+@bg-card-todo: #F3F4F6;      // 待办：浅灰
+@bg-card-progress: #FDF6B2;  // 进行中：浅黄
+@bg-card-review: #E0E7FF;    // 审核中：浅紫蓝
+@bg-card-done: #D1FAE5;      // 已完成：浅绿
+
+// 边框颜色
+@border-color: @border-light;    // 保持向后兼容
+@border-light: #E5E7EB;    // 浅色边框
+@border-medium: #D1D5DB;   // 中等边框
+@border-dark: #9CA3AF;     // 深色边框
+
+// 阴影系统
+@shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+@shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+@shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+// 颜色系统
+@primary-color: #1677FF;
+@primary-hover: #40A9FF;
+
+// 背景色
+@bg-base: #F5F6F8;
+@bg-white: #FFFFFF;
+@bg-todo: #E3F0FF;
+@bg-progress: #E6F4FF;
+@bg-done: #F6FFED;
+
+// 文字颜色
+@text-primary: #1F2937;    // 主要文字：深灰
+@text-secondary: #4B5563;  // 次要文字：中灰
+@text-tertiary: #9CA3AF;   // 第三级文字：浅灰
+@text-light: #FFFFFF;      // 浅色文字：白色
+@text-disabled: #8C8C8C;
+@text-todo: #1677FF;
+@text-progress: #0958D9;
+@text-done: #52C41A;
+
+// 字体家族
+@font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+  'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+  'Noto Color Emoji';
+
+// 字体大小
+@font-size-xs: 12px;
+@font-size-sm: 14px;
+@font-size-base: 16px;
+@font-size-lg: 18px;
+@font-size-xl: 20px;
+
+// 字重
+@font-weight-regular: 400;
+@font-weight-medium: 500;
+@font-weight-bold: 600;
+
+// 行高
+@line-height-tight: 1.2;
+@line-height-base: 1.5;
+@line-height-relaxed: 1.75;
+
+// 圆角
+@border-radius-xs: 6px;
+@border-radius-sm: 8px;
+@border-radius-base: 12px;
+@border-radius-lg: 16px;
+@border-radius-xl: 24px;
+@border-radius-full: 9999px;
+
+// 间距
+@spacing-xs: 4px;
+@spacing-sm: 8px;
+@spacing-base: 16px;
+@spacing-lg: 24px;
+@spacing-xl: 32px;
+
+// 阴影
+@shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+// 过渡
+@transition-all: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+@transition-colors: color 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// 边框
+@border-width: 1px;
+
+// 卡片样式
+@card-padding: @spacing-base;
+@card-bg: @bg-white;
+@card-radius: @border-radius-base;
+@card-shadow: @shadow-base;
+
+// 状态卡片样式
+.status-card-mixin() {
+  padding: @card-padding;
+  border-radius: @card-radius;
+  box-shadow: @shadow-base;
+  transition: @transition-all;
+  
+  &:hover {
+    box-shadow: @shadow-md;
+  }
+}
+
+// 侧边栏文字颜色
+@text-sidebar: @text-primary;      // 侧边栏文字颜色
+@text-sidebar-secondary: @text-secondary; // 侧边栏次要文字
+
+// 侧边栏边框和分割线
+@border-sidebar: @border-light;    // 侧边栏边框颜色
+@divider-sidebar: @border-light;   // 侧边栏分割线颜色
+
+// 侧边栏主题色（紫色系）
+@sidebar-primary: #6200EA;    // 主题紫色
+@sidebar-light: #F8F2FF;     // 最浅的紫色
+@sidebar-hover: rgba(98, 0, 234, 0.15);     // 悬浮状态（增加透明度）
+@sidebar-active-bg: #6200EA;  // 选中背景色
+
+// 交互状态
+@bg-sidebar-hover: @sidebar-hover;   // 悬浮效果
+@bg-sidebar-active: @sidebar-active-bg;  // 选中背景
+@text-sidebar-active: #FFFFFF;   // 选中文字颜色（改为白色）
