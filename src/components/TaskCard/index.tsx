@@ -2,7 +2,44 @@ import TaskItem from "./TaskItem";
 import { Card } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "./index.less";
+import { useState } from "react";
+import { ITaskItem } from "@/types/task";
 export default function TaskCard() {
+  const [taskList] = useState<ITaskItem[]>([
+    {
+      id: 1,
+      title: "学习react基础语法",
+      description:
+        "学习react基础语法，包括组件、状态、事件等。学会自己封装组件。使用antd组件库。自己写一个项目。并将其记录到github上。顺便可以学习下typescript。",
+      tags: ["学习", "前端", "react"],
+      date: "2025-05-29",
+    },
+    {
+      id: 2,
+      title: "学习Vue基础语法",
+      description:
+        "学习Vue基础语法，包括组件、状态、事件等。学会自己封装组件。使用antd组件库。自己写一个项目。并将其记录到github上。顺便可以学习下typescript。",
+      tags: ["学习", "前端", "vue"],
+      date: "2025-05-29",
+    },
+    {
+      id: 3,
+      title: "学习Vue基础语法",
+      description:
+        "学习Vue基础语法，包括组件、状态、事件等。学会自己封装组件。使用antd组件库。自己写一个项目。并将其记录到github上。顺便可以学习下typescript。",
+      tags: ["学习", "前端", "vue"],
+      date: "2025-05-29",
+    },
+    {
+      id: 4,
+      title: "学习Vue基础语法",
+      description:
+        "学习Vue基础语法，包括组件、状态、事件等。学会自己封装组件。使用antd组件库。自己写一个项目。并将其记录到github上。顺便可以学习下typescript。",
+      tags: ["学习", "前端", "vue"],
+      date: "2025-05-29",
+    },
+  ]);
+
   return (
     <Card
       title="未完成"
@@ -14,12 +51,9 @@ export default function TaskCard() {
       className="task-card"
     >
       <div className="grid  gap-2.5">
-        <TaskItem />
-        <TaskItem />
-        <TaskItem />
-        <TaskItem />
-        <TaskItem />
-        <TaskItem />
+        {taskList.map((item) => (
+          <TaskItem data={item} key={item.id} />
+        ))}
       </div>
     </Card>
   );

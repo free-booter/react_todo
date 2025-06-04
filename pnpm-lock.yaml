@@ -14,6 +14,9 @@ importers:
       antd:
         specifier: ^5.25.3
         version: 5.25.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       normalize.css:
         specifier: ^8.0.1
         version: 8.0.1
