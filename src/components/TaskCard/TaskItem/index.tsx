@@ -1,54 +1,30 @@
 import SvgIcon from "@/components/SvgIcon";
 import {
-  BarChartOutlined,
   ClockCircleOutlined,
   DeleteOutlined,
-  DotChartOutlined,
   EditOutlined,
   EllipsisOutlined,
-  LineChartOutlined,
-  PieChartOutlined,
-  SunOutlined,
 } from "@ant-design/icons";
-import {
-  Checkbox,
-  DatePicker,
-  Dropdown,
-  Flex,
-  Form,
-  Input,
-  MenuProps,
-  Modal,
-  Radio,
-  RadioChangeEvent,
-  Select,
-  Tag,
-  Tooltip,
-} from "antd";
+import { Checkbox, Dropdown, MenuProps, Tag, Tooltip } from "antd";
 import "./index.less";
 import { useState } from "react";
 import { ITaskItem } from "@/types/task";
-import locale from "antd/es/date-picker/locale/zh_CN";
+import TaskModal from "@/components/TaskModal";
 
 export default function TaskItem({ data }: { data: ITaskItem }) {
-  const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
-  const openModal = () => {
+  const [type, setType] = useState<"add" | "edit">("add");
+  const openModal = (type: "add" | "edit") => {
     setOpen(true);
-    form.setFieldsValue({
-      ...data,
-      dateType: 1,
-    });
+    setType(type);
   };
-  const hideModal = () => {
-    setOpen(false);
-  };
+
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: "编辑",
       icon: <EditOutlined />,
-      onClick: () => openModal(),
+      onClick: () => openModal("edit"),
     },
     {
       key: "2",
@@ -57,13 +33,7 @@ export default function TaskItem({ data }: { data: ITaskItem }) {
       icon: <DeleteOutlined />,
     },
   ];
-  const changeDateType = (e: RadioChangeEvent) => {
-    const value = e.target.value;
-    form.setFieldsValue({
-      dateType: value,
-    });
-    console.log(form.getFieldValue("dateType"));
-  };
+
   return (
     <>
       <div className="task-item">
@@ -105,82 +75,12 @@ export default function TaskItem({ data }: { data: ITaskItem }) {
           </div>
         </div>
       </div>
-      {open && (
-        <Modal
-          title="编辑任务"
-          open={open}
-          onOk={hideModal}
-          onCancel={hideModal}
-          okText="确认"
-          cancelText="取消"
-          forceRender={true}
-        >
-          <Form form={form}>
-            <Form.Item label="名称：" name="title">
-              <Input placeholder="请输入标题" />
-            </Form.Item>
-            <Form.Item label="描述：" name="description">
-              <Input.TextArea
-                style={{ minHeight: 100 }}
-                placeholder="请输入描述"
-              />
-            </Form.Item>
-            <Form.Item label="标签：" name="tags">
-              <Select
-                mode="multiple"
-                maxCount={3}
-                showSearch
-                placeholder="请选择标签"
-                optionFilterProp="label"
-                options={data.tags.map((tag) => ({
-                  value: tag,
-                  label: tag,
-                }))}
-              />
-            </Form.Item>
-            <Form.Item label="日期类型：" name="dateType">
-              <Radio.Group buttonStyle="solid">
-                <Radio.Button value={1} className="option-1">
-                  <Flex justify="center" align="center" vertical>
-                    <SunOutlined style={{ fontSize: 20 }} />
-                    今天
-                  </Flex>
-                </Radio.Button>
-                <Radio.Button value={2} className="option-2">
-                  <Flex justify="center" align="center" vertical>
-                    <SvgIcon size={22} name="task-sunrise" />
-                    明天
-                  </Flex>
-                </Radio.Button>
-                <Radio.Button value={3} className="option-3">
-                  <Flex justify="center" align="center" vertical>
-                    <SvgIcon size={20} name="task-calendar-one" />
-                    日期
-                  </Flex>
-                </Radio.Button>
-                <Radio.Button value={4} className="option-4">
-                  <Flex justify="center" align="center" vertical>
-                    <SvgIcon size={20} name="task-calendar" />
-                    时间段
-                  </Flex>
-                </Radio.Button>
-                <Radio.Button value={5} className="option-5">
-                  <Flex justify="center" align="center" vertical>
-                    <SvgIcon size={20} name="task-calendar-none" />无
-                  </Flex>
-                </Radio.Button>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item label="日期：">
-              <DatePicker
-                locale={locale}
-                format="YYYY-MM-DD"
-                placeholder="请选择日期"
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
-      )}
+      <TaskModal
+        data={data}
+        type={type}
+        open={open}
+        close={() => setOpen(false)}
+      />
     </>
   );
 }

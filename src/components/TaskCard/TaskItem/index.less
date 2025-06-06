@@ -42,58 +42,6 @@
       font-size: @font-size-sm;
     }
   }
-
-.ant-radio-group {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-
-  .ant-radio-button-wrapper {
-    text-align: center;
-    height: auto;
-    padding: 12px 8px;
-    border-radius: 8px;
-    border: 1px solid @border-color;
-    margin-right: 0;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-      border-color: @theme-primary;
-      color: @theme-primary;
-    }
-
-    &::before {
-      display: none;
-    }
-
-    &.ant-radio-button-wrapper-checked {
-      background: #e6f7ff;
-      border-color: #1890ff;
-      color: #1890ff;
-      box-shadow: none;
-    }
-
-    .anticon, .icon {
-      font-size: 20px;
-      margin-bottom: 4px;
-      display: block;
-    }
-
-    .ant-flex {
-      width: 100%;
-      gap: 4px;
-    }
-  }
-}
-.ant-radio-button-wrapper-checked {
-  background: #f9f0ff !important;
-  border-color: #9254de !important;
-  color: #9254de !important;
-}
 // // 自定义每个选项的样式
 // .option-1 {
 //   &.ant-radio-button-wrapper-checked {
