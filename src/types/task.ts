@@ -1,10 +1,10 @@
-export interface ITaskItem {
+export interface TodoDetail {
   id: number;
   title: string;
   description: string;
   tags: string[];
-  status: TaskStatus;
-  isCompleted: boolean;
+  status: any;
+  isDone: boolean;
   priority: TaskPriority;
   dateType: number;
   date: string; // 指定日期
@@ -19,9 +19,14 @@ export interface ITaskItem {
   repeatType?: number; // 重复类型
 }
 
-export type TaskStatus = "todo" | "done";
+// export type TaskStatus = "todo" | "doing" | "done";
 export enum TaskPriority {
   LOW = 1,
   MEDIUM = 2,
   HIGH = 3,
+}
+export enum TaskStatus {
+  todo = 1,
+  doing = 2,
+  done = 3,
 }

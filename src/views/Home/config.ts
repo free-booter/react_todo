@@ -1,8 +1,10 @@
+import { TaskStatus } from "@/types/task";
+
 export interface Task {
   id: number;
   title: string;
   description: string;
-  status: "todo" | "doing" | "done";
+  status: TaskStatus;
 }
 
 export const todoTaskList: Task[] = [

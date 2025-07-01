@@ -8,10 +8,10 @@ import {
 import { Checkbox, Dropdown, MenuProps, Tag, Tooltip } from "antd";
 import "./index.less";
 import { useState } from "react";
-import { ITaskItem } from "@/types/task";
+import { TodoDetail } from "@/types/task";
 import TaskModal from "@/components/TaskModal";
 
-export default function TaskItem({ data }: { data: ITaskItem }) {
+export default function TaskItem({ data }: { data: TodoDetail }) {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<"add" | "edit">("add");
   const openModal = (type: "add" | "edit") => {
@@ -34,6 +34,9 @@ export default function TaskItem({ data }: { data: ITaskItem }) {
     },
   ];
 
+  const changeStatus = () => {
+    data.isDone = !data.isDone;
+  };
   return (
     <>
       <div className="task-item">
@@ -41,7 +44,11 @@ export default function TaskItem({ data }: { data: ITaskItem }) {
           <div className="task-item__flag todo">
             <SvgIcon size={20} name="task-flag-fill" />
           </div>
-          <Checkbox className="mr-5"></Checkbox>
+          <Checkbox
+            className="mr-5"
+            checked={data.isDone}
+            onChange={changeStatus}
+          ></Checkbox>
           <div className="task-item__more">
             <Dropdown menu={{ items }}>
               <a onClick={(e) => e.preventDefault()}>

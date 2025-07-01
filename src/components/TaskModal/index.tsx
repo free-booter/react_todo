@@ -1,4 +1,4 @@
-import { ITaskItem, TaskPriority } from "@/types/task";
+import { TodoDetail, TaskPriority } from "@/types/task";
 import "./index.less";
 import SvgIcon from "@/components/SvgIcon";
 import { SunOutlined } from "@ant-design/icons";
@@ -15,12 +15,12 @@ import {
 import { useEffect } from "react";
 import dayjs from "dayjs";
 export default function TaskModal({
-  data = {} as ITaskItem,
+  data = {} as TodoDetail,
   type = "add",
   open,
   close,
 }: {
-  data: ITaskItem;
+  data: TodoDetail;
   type: "add" | "edit";
   open: boolean;
   close: () => void;
