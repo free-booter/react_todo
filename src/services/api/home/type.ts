@@ -8,11 +8,11 @@ export type TodoListItem = {
   priority: number;
   createTime: string;
   updateTime: string;
+  tags: Array<string>;
+  date: string;
 };
 export interface TodoListRes extends BasePageRes<TodoListItem> {}
 
 export interface TodoListReq extends BasePageReq {
-  reqData: {
-    status: number;
-  };
+  status: number;
 }

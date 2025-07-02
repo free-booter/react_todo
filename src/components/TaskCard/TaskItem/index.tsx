@@ -5,13 +5,14 @@ import {
   EditOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import { Checkbox, Dropdown, MenuProps, Tag, Tooltip } from "antd";
+import { Checkbox, Dropdown, MenuProps, message, Tag, Tooltip } from "antd";
 import "./index.less";
 import { useState } from "react";
 import { TodoDetail } from "@/types/task";
 import TaskModal from "@/components/TaskModal";
+import { TodoListItem } from "@/services/api/home/type";
 
-export default function TaskItem({ data }: { data: TodoDetail }) {
+export default function TaskItem({ data }: { data: TodoListItem }) {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<"add" | "edit">("add");
   const openModal = (type: "add" | "edit") => {
@@ -34,21 +35,31 @@ export default function TaskItem({ data }: { data: TodoDetail }) {
     },
   ];
 
+  const [isDone, setIsDone] = useState(false);
   const changeStatus = () => {
-    data.isDone = !data.isDone;
+    setIsDone(!isDone);
+    message.success("又一个小目标被你收入囊中！");
   };
+  // 优先级class
+  const priorityClassName = ["high", "medium", "low"];
   return (
     <>
       <div className="task-item">
         <div className="task-item__header flex items-center">
-          <div className="task-item__flag todo">
+          <div
+            className={`task-item__flag ${
+              priorityClassName[data.priority - 1]
+            }`}
+          >
             <SvgIcon size={20} name="task-flag-fill" />
           </div>
-          <Checkbox
-            className="mr-5"
-            checked={data.isDone}
-            onChange={changeStatus}
-          ></Checkbox>
+          {data.status !== 3 && (
+            <Checkbox
+              className="mr-5"
+              checked={isDone}
+              onChange={changeStatus}
+            ></Checkbox>
+          )}
           <div className="task-item__more">
             <Dropdown menu={{ items }}>
               <a onClick={(e) => e.preventDefault()}>
@@ -82,12 +93,12 @@ export default function TaskItem({ data }: { data: TodoDetail }) {
           </div>
         </div>
       </div>
-      <TaskModal
+      {/* <TaskModal
         data={data}
         type={type}
         open={open}
         close={() => setOpen(false)}
-      />
+      /> */}
     </>
   );
 }

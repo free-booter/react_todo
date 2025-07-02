@@ -6,5 +6,5 @@ import { TodoListReq, TodoListRes } from "./type";
  * @param data 请求参数
  * @returns 待办列表
  */
-export const reqTodoList = (data: TodoListReq) =>
+export const reqTodoList = (data: TodoListReq): Promise<TodoListRes> =>
   request.get<TodoListRes>("/todo/list", data);

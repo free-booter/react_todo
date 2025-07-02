@@ -13,10 +13,11 @@ export default function Home() {
 
   useEffect(() => {
     Object.keys(TaskStatus).map((status) => {
+      if (isNaN(Number(status))) return;
       reqTodoList({
         current: 1,
         size: 10,
-        reqData: { status: Number(status) },
+        status: Number(status),
       }).then((res) => {
         if (status === "1") {
           setTodoList(res.list);
@@ -31,10 +32,9 @@ export default function Home() {
   return (
     <div className="home-page">
       <Space size={20} className="w-full grid grid-cols-3 items-start h-full">
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
+        {<TaskCard data={{ title: "未完成", taskList: todoList }} />}
+        {<TaskCard data={{ title: "正在进行", taskList: doingList }} />}
+        {<TaskCard data={{ title: "已完成", taskList: doneList }} />}
       </Space>
     </div>
   );

@@ -6,8 +6,13 @@ import { useState } from "react";
 import { ITaskItem } from "@/types/task";
 import { TaskPriority } from "@/types/task";
 import TaskModal from "@/components/TaskModal";
+import { TodoListItem } from "@/services/api/home/type";
 
-export default function TaskCard() {
+export default function TaskCard({
+  data,
+}: {
+  data: { title: string; taskList: TodoListItem[] };
+}) {
   const [open, setOpen] = useState(false);
   const openModal = () => {
     setOpen(true);
@@ -74,7 +79,7 @@ export default function TaskCard() {
   return (
     <>
       <Card
-        title="未完成"
+        title={data.title}
         extra={
           <a onClick={() => openModal()}>
             <PlusOutlined />
@@ -83,12 +88,12 @@ export default function TaskCard() {
         className="task-card"
       >
         <div className="grid  gap-2.5">
-          {taskList.map((item) => (
+          {data.taskList.map((item) => (
             <TaskItem data={item} key={item.id} />
           ))}
         </div>
       </Card>
-      <TaskModal type="add" open={open} close={() => setOpen(false)} />
+      {/* <TaskModal type="add" open={open} close={() => setOpen(false)} /> */}
     </>
   );
 }

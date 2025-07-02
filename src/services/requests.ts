@@ -25,20 +25,24 @@ class Requests {
     );
   }
 
-  public get<T>(url: string, params: any) {
-    return this.instance.get<T>(url, { params });
+  public get<T>(url: string, params: any): Promise<T> {
+    return this.instance
+      .get<T>(url, { params })
+      .then((res) => res as unknown as T);
   }
 
   public post<T>(url: string, data: any) {
-    return this.instance.post<T>(url, data);
+    return this.instance.post<T>(url, data).then((res) => res as unknown as T);
   }
 
   public put<T>(url: string, data: any) {
-    return this.instance.put<T>(url, data);
+    return this.instance.put<T>(url, data).then((res) => res as unknown as T);
   }
 
   public delete<T>(url: string, params: any) {
-    return this.instance.delete<T>(url, { params });
+    return this.instance
+      .delete<T>(url, { params })
+      .then((res) => res as unknown as T);
   }
 }
 

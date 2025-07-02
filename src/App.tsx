@@ -1,4 +1,3 @@
-import { Routes, Route, Link, Outlet } from "react-router-dom";
 import Layout from "./layout";
 import { ConfigProvider } from "antd";
 function App() {
