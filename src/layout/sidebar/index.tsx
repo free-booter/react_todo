@@ -7,7 +7,7 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
-    { path: "/", label: "Home" },
+    { path: "/", label: "Task" },
     { path: "/dashboard", label: "Dashboard" },
   ];
 

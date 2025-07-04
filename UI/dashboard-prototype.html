@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TodoList - Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <style>
+      .heatmap-cell {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        margin: 2px;
+        transition: all 0.3s ease;
+      }
+      .heatmap-cell:hover {
+        transform: scale(1.1);
+      }
+      .contribution-0 {
+        background-color: #ebedf0;
+      }
+      .contribution-1 {
+        background-color: #9be9a8;
+      }
+      .contribution-2 {
+        background-color: #40c463;
+      }
+      .contribution-3 {
+        background-color: #30a14e;
+      }
+      .contribution-4 {
+        background-color: #216e39;
+      }
+      .speed-dial {
+        transition: all 0.3s ease;
+      }
+      .speed-dial-item {
+        transition: all 0.3s ease;
+        transform: scale(0);
+        opacity: 0;
+      }
+      .speed-dial:hover .speed-dial-item {
+        transform: scale(1);
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div class="flex h-screen">
+      <!-- 侧边栏 -->
+      <div class="w-64 bg-white shadow-lg">
+        <div class="p-4">
+          <h1 class="text-xl font-bold text-gray-800">TodoList</h1>
+        </div>
+        <nav class="mt-4">
+          <a
+            href="dashboard-prototype.html"
+            class="flex items-center px-4 py-2 bg-blue-50 text-blue-600"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              ></path>
+            </svg>
+            Dashboard
+          </a>
+          <a
+            href="tasks.html"
+            class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-50"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              ></path>
+            </svg>
+            Tasks
+          </a>
+          <a
+            href="calendar-view.html"
+            class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-50"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              ></path>
+            </svg>
+            Calendar
+          </a>
+        </nav>
+      </div>
+
+      <!-- 主内容区 -->
+      <div class="flex-1 overflow-auto">
+        <!-- 顶部统计卡片 -->
+        <div class="p-6 grid grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-sm font-medium text-gray-500">今日任务完成率</h3>
+            <div class="mt-2 flex items-baseline">
+              <span class="text-2xl font-semibold text-gray-900">75%</span>
+              <span class="ml-2 text-sm text-green-600">↑ 12%</span>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-sm font-medium text-gray-500">待处理任务</h3>
+            <div class="mt-2 flex items-baseline">
+              <span class="text-2xl font-semibold text-gray-900">12</span>
+              <span class="ml-2 text-sm text-gray-600">总计</span>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-sm font-medium text-gray-500">本周目标进度</h3>
+            <div class="mt-2 flex items-baseline">
+              <span class="text-2xl font-semibold text-gray-900">60%</span>
+              <div class="ml-2 w-24 h-2 bg-gray-200 rounded-full">
+                <div class="w-3/5 h-full bg-blue-600 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-sm font-medium text-gray-500">专注时长</h3>
+            <div class="mt-2 flex items-baseline">
+              <span class="text-2xl font-semibold text-gray-900">2.5h</span>
+              <span class="ml-2 text-sm text-gray-600">今日</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 重要任务预览 -->
+        <div class="px-6 py-4">
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-4 py-3 border-b border-gray-200">
+              <h2 class="text-lg font-medium text-gray-900">重要任务</h2>
+            </div>
+            <div class="p-4">
+              <div class="space-y-4">
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 text-blue-600 rounded border-gray-300"
+                  />
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">
+                      完成产品设计文档
+                    </p>
+                    <p class="text-sm text-gray-500">今天 18:00 截止</p>
+                  </div>
+                  <span
+                    class="ml-auto px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded"
+                    >高优先级</span
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 text-blue-600 rounded border-gray-300"
+                  />
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">UI组件开发</p>
+                    <p class="text-sm text-gray-500">明天 12:00 截止</p>
+                  </div>
+                  <span
+                    class="ml-auto px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded"
+                    >中优先级</span
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 text-blue-600 rounded border-gray-300"
+                  />
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">
+                      数据统计功能实现
+                    </p>
+                    <p class="text-sm text-gray-500">周五 18:00 截止</p>
+                  </div>
+                  <span
+                    class="ml-auto px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded"
+                    >中优先级</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 数据图表区 -->
+        <div class="px-6 py-4 grid grid-cols-2 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg font-medium text-gray-900">本周任务完成趋势</h3>
+            <div style="height: 300px">
+              <canvas id="taskTrendChart" class="mt-4"></canvas>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <h3 class="text-lg font-medium text-gray-900">任务分类占比</h3>
+            <div style="height: 300px">
+              <canvas id="taskTypeChart" class="mt-4"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 快捷功能区 -->
+        <div class="fixed bottom-8 right-8 speed-dial">
+          <!-- 主按钮 -->
+          <button
+            class="bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 z-50 relative"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              ></path>
+            </svg>
+          </button>
+
+          <!-- 快捷功能按钮组 -->
+          <div
+            class="absolute bottom-full right-0 mb-4 space-y-2 speed-dial-item"
+          >
+            <!-- 番茄钟 -->
+            <button
+              class="bg-red-500 text-white rounded-full p-3 shadow-lg hover:bg-red-600 flex items-center"
+              title="开启番茄钟"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </button>
+
+            <!-- 今日任务 -->
+            <button
+              class="bg-green-500 text-white rounded-full p-3 shadow-lg hover:bg-green-600 flex items-center"
+              title="查看今日任务"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                ></path>
+              </svg>
+            </button>
+
+            <!-- 重要任务 -->
+            <button
+              class="bg-yellow-500 text-white rounded-full p-3 shadow-lg hover:bg-yellow-600 flex items-center"
+              title="查看重要任务"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 初始化图表
+      document.addEventListener("DOMContentLoaded", function () {
+        // 任务趋势图
+        const trendCtx = document
+          .getElementById("taskTrendChart")
+          .getContext("2d");
+        new Chart(trendCtx, {
+          type: "line",
+          data: {
+            labels: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+            datasets: [
+              {
+                label: "完成任务数",
+                data: [5, 8, 6, 9, 7, 4, 6],
+                borderColor: "#3B82F6",
+                backgroundColor: "rgba(59, 130, 246, 0.1)",
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: "rgba(0, 0, 0, 0.05)",
+                },
+              },
+              x: {
+                grid: {
+                  display: false,
+                },
+              },
+            },
+          },
+        });
+
+        // 任务分类占比
+        const typeCtx = document
+          .getElementById("taskTypeChart")
+          .getContext("2d");
+        new Chart(typeCtx, {
+          type: "doughnut",
+          data: {
+            labels: ["工作", "学习", "生活", "其他"],
+            datasets: [
+              {
+                data: [40, 25, 20, 15],
+                backgroundColor: ["#3B82F6", "#10B981", "#F59E0B", "#6B7280"],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  padding: 20,
+                  usePointStyle: true,
+                },
+              },
+            },
+            cutout: "70%",
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
