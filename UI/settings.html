@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TodoList - 设置</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-bg: #fafafa;
+            --card-bg: #ffffff;
+            --border-color: #f0f0f0;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar {
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: var(--accent-purple);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+
+        .settings-item {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .settings-item:hover {
+            background: #f8fafc;
+        }
+
+        .btn {
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div class="flex h-screen">
+        <!-- 侧边栏 -->
+        <div class="sidebar w-64 flex flex-col">
+            <div class="p-6">
+                <h1 class="text-xl font-bold text-gray-900 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                        </path>
+                    </svg>
+                    TodoList
+                </h1>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-1">
+                <a href="dashboard-prototype.html" class="nav-item flex items-center text-gray-600">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                        </path>
+                    </svg>
+                    仪表盘
+                </a>
+                <a href="tasks.html" class="nav-item flex items-center text-gray-600">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                        </path>
+                    </svg>
+                    任务
+                </a>
+                <a href="calendar-view.html" class="nav-item flex items-center text-gray-600">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    日历
+                </a>
+                <a href="settings.html" class="nav-item active flex items-center">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    设置
+                </a>
+            </nav>
+
+            <div class="p-4 mt-auto">
+                <div class="glass-effect p-4 rounded-lg">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-medium text-gray-700">今日目标</span>
+                        <span class="text-sm text-blue-600">50%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-1">
+                        <div class="bg-blue-600 h-1 rounded-full" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white h-16 flex items-center justify-between px-6 border-b border-gray-200">
+                <h1 class="text-xl font-semibold text-gray-900">设置</h1>
+                <div class="flex items-center space-x-4">
+                    <button class="btn-secondary">取消</button>
+                    <button class="btn-primary">保存更改</button>
+                </div>
+            </header>
+
+            <!-- 主要内容区域 -->
+            <main class="flex-1 overflow-auto p-6">
+                <!-- 个性化设置 -->
+                <section class="settings-section">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">个性化</h2>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">深色模式</h3>
+                                <p class="text-sm text-gray-500">切换深色/浅色主题</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">紧凑视图</h3>
+                                <p class="text-sm text-gray-500">减小界面元素间距，显示更多内容</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="compactViewToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">主题色</h3>
+                                <p class="text-sm text-gray-500">选择您喜欢的主题色</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button
+                                    class="w-6 h-6 rounded-full bg-blue-500 ring-2 ring-offset-2 ring-blue-500"></button>
+                                <button class="w-6 h-6 rounded-full bg-purple-500"></button>
+                                <button class="w-6 h-6 rounded-full bg-green-500"></button>
+                                <button class="w-6 h-6 rounded-full bg-red-500"></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 提醒设置 -->
+                <section class="settings-section">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">提醒设置</h2>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">任务到期提醒</h3>
+                                <p class="text-sm text-gray-500">任务截止前发送提醒</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="taskReminderToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">提前提醒时间</label>
+                            <select class="w-full border-gray-300 rounded-md shadow-sm">
+                                <option>5分钟</option>
+                                <option>15分钟</option>
+                                <option>30分钟</option>
+                                <option>1小时</option>
+                                <option>1天</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">休息提醒</h3>
+                                <p class="text-sm text-gray-500">每工作1小时提醒休息</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="breakReminderToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">休息间隔</label>
+                            <select class="w-full border-gray-300 rounded-md shadow-sm">
+                                <option>30分钟</option>
+                                <option>45分钟</option>
+                                <option>1小时</option>
+                                <option>1.5小时</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 专注设置 -->
+                <section class="settings-section">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">专注设置</h2>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">默认专注时长</h3>
+                                <p class="text-sm text-gray-500">设置番茄钟默认时长</p>
+                            </div>
+                            <select class="border-gray-300 rounded-md shadow-sm">
+                                <option>25分钟</option>
+                                <option>45分钟</option>
+                                <option>60分钟</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">自动开始下一轮</h3>
+                                <p class="text-sm text-gray-500">专注结束后自动开始下一轮</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autoStartToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">专注音效</h3>
+                                <p class="text-sm text-gray-500">选择专注时的背景音效</p>
+                            </div>
+                            <select class="border-gray-300 rounded-md shadow-sm">
+                                <option>白噪音</option>
+                                <option>雨声</option>
+                                <option>咖啡厅</option>
+                                <option>自然</option>
+                                <option>无</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 数据管理 -->
+                <section class="settings-section">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">数据管理</h2>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">数据导出</h3>
+                                <p class="text-sm text-gray-500">导出所有任务和统计数据</p>
+                            </div>
+                            <button class="btn-secondary text-sm">导出</button>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">导出格式</label>
+                            <select class="w-full border-gray-300 rounded-md shadow-sm">
+                                <option>JSON</option>
+                                <option>CSV</option>
+                                <option>Excel</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">数据备份</h3>
+                                <p class="text-sm text-gray-500">自动备份数据到云端</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autoBackupToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">备份频率</label>
+                            <select class="w-full border-gray-300 rounded-md shadow-sm">
+                                <option>每天</option>
+                                <option>每周</option>
+                                <option>每月</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-item">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">清除数据</h3>
+                                <p class="text-sm text-gray-500">清除所有本地存储的数据</p>
+                            </div>
+                            <button class="text-sm text-red-600 hover:text-red-700">清除</button>
+                        </div>
+                        <p class="mt-2 text-xs text-red-500">警告：此操作不可撤销</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 深色模式切换
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('change', function () {
+            document.body.classList.toggle('dark-mode');
+            // 保存设置到本地存储
+            localStorage.setItem('darkMode', this.checked);
+        });
+
+        // 加载保存的设置
+        document.addEventListener('DOMContentLoaded', function () {
+            // 加载深色模式设置
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            darkModeToggle.checked = darkMode;
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+
+            // 加载其他设置
+            const toggles = ['compactViewToggle', 'taskReminderToggle', 'breakReminderToggle', 'autoStartToggle', 'autoBackupToggle'];
+            toggles.forEach(id => {
+                const toggle = document.getElementById(id);
+                if (toggle) {
+                    toggle.checked = localStorage.getItem(id) === 'true';
+                }
+            });
+        });
+
+        // 保存设置
+        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+            toggle.addEventListener('change', function () {
+                localStorage.setItem(this.id, this.checked);
+            });
+        });
+
+        // 主题色选择
+        document.querySelectorAll('.rounded-full').forEach(button => {
+            button.addEventListener('click', function () {
+                // 移除其他按钮的ring
+                document.querySelectorAll('.rounded-full').forEach(btn => {
+                    btn.classList.remove('ring-2', 'ring-offset-2');
+                });
+                // 添加当前按钮的ring
+                this.classList.add('ring-2', 'ring-offset-2');
+                // 保存选择的主题色
+                const color = this.classList.contains('bg-blue-500') ? 'blue' :
+                    this.classList.contains('bg-purple-500') ? 'purple' :
+                        this.classList.contains('bg-green-500') ? 'green' : 'red';
+                localStorage.setItem('themeColor', color);
+            });
+        });
+    </script>
+</body>
+
+</html>
