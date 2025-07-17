@@ -7,11 +7,17 @@ import { ITaskItem } from "@/types/task";
 import { TaskPriority } from "@/types/task";
 import TaskModal from "@/components/TaskModal";
 import { TodoListItem } from "@/services/api/home/type";
+import SvgIcon from "../SvgIcon";
 
 export default function TaskCard({
   data,
 }: {
-  data: { title: string; taskList: TodoListItem[] };
+  data: {
+    title: string;
+    taskList: TodoListItem[];
+    icon: string;
+    color: string;
+  };
 }) {
   const [open, setOpen] = useState(false);
   const openModal = () => {
@@ -79,7 +85,12 @@ export default function TaskCard({
   return (
     <>
       <Card
-        title={data.title}
+        title={
+          <div className="flex items-center gap-2">
+            <SvgIcon name={data.icon} color={data.color} />
+            <span className="text-sm text-gray-500">{data.title}</span>
+          </div>
+        }
         extra={
           <a onClick={() => openModal()}>
             <PlusOutlined />

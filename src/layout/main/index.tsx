@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../../views/Home";
+import Home from "../../views/Task";
 import Dashboard from "../../views/Dashboard";
 import Header from "../header";
 import "./index.less";

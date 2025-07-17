@@ -1,0 +1,83 @@
+// 背景色生成函数
+// 用法: .generate-background-color(@color, @opacity: 0.1, @mode: 'light')
+.generate-background-color(@color, @opacity: 0.1, @mode: "light") {
+  // 浅色模式
+  & when (@mode = "light") {
+    background-color: fade(@color, percentage(@opacity));
+  }
+
+  // 深色模式
+  & when (@mode = "dark") {
+    @darkened-color: darken(@color, 40%);
+    background-color: fade(@darkened-color, percentage(@opacity));
+  }
+
+  // 渐变模式
+  & when (@mode = "gradient") {
+    @lighter-color: lighten(@color, 35%);
+    background: linear-gradient(
+      135deg,
+      fade(@lighter-color, percentage(@opacity)) 0%,
+      fade(@color, percentage(@opacity)) 100%
+    );
+  }
+}
+
+// 预设的背景色混合
+.bg-primary-light {
+  .generate-background-color(@theme-primary, 0.1, "light");
+}
+
+.bg-primary-dark {
+  .generate-background-color(@theme-primary, 0.1, "dark");
+}
+
+.bg-primary-gradient {
+  .generate-background-color(@theme-primary, 0.1, "gradient");
+}
+
+// 成功状态背景
+.bg-success-light {
+  .generate-background-color(@success, 0.1, "light");
+}
+
+// 警告状态背景
+.bg-warning-light {
+  .generate-background-color(@warning, 0.1, "light");
+}
+
+// 错误状态背景
+.bg-danger-light {
+  .generate-background-color(@danger, 0.1, "light");
+}
+
+// 信息状态背景
+.bg-info-light {
+  .generate-background-color(@info, 0.1, "light");
+}
+
+// SVG 动画和样式
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+  transform-origin: center;
+
+  //   // 确保 SVG 边框可见
+  //   & circle {
+  //     stroke: currentColor;
+  //     stroke-width: 2;
+  //   }
+
+  //   & path {
+  //     stroke: currentColor;
+  //     stroke-width: 2;
+  //   }
+}

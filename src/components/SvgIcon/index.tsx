@@ -5,6 +5,8 @@ interface SvgIconProps {
   name: string;
   size?: number;
   className?: string;
+  color?: string;
+  style?: React.CSSProperties;
 }
 
 const SvgIcon: React.FC<SvgIconProps> = ({
@@ -12,10 +14,17 @@ const SvgIcon: React.FC<SvgIconProps> = ({
   className,
   prefix = "icon",
   size = 16,
+  color,
+  style,
 }) => {
   const symbolId = `#${prefix}-${name}`;
   return (
-    <svg className={className} width={size} height={size}>
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      style={{ color, ...style }}
+    >
       <use xlinkHref={symbolId} />
     </svg>
   );
