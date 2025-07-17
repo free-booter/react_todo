@@ -1,5 +1,6 @@
-import Layout from "./layout";
+import { Outlet, RouterProvider, useRoutes } from "react-router-dom";
 import { ConfigProvider } from "antd";
+import routeConfig from "./router";
 function App() {
   return (
     <>
@@ -10,7 +11,12 @@ function App() {
           },
         }}
       >
-        <Layout />
+        <RouterProvider
+          future={{
+            v7_startTransition: true,
+          }}
+          router={routeConfig}
+        />
       </ConfigProvider>
     </>
   );

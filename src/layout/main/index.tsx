@@ -1,6 +1,4 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "../../views/Task";
-import Dashboard from "../../views/Dashboard";
+import { Outlet } from "react-router-dom";
 import Header from "../header";
 import "./index.less";
 export default function Main() {
@@ -8,10 +6,7 @@ export default function Main() {
     <div className="main-wrapper flex-1">
       <Header />
       <div className="content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
+        <Outlet />
       </div>
     </div>
   );

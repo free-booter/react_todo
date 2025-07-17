@@ -1,24 +1,22 @@
 import Login from "@/views/Login";
 import Dashboard from "../views/Dashboard";
 import Task from "../views/Task";
+import Layout from "@/layout";
+import { createBrowserRouter } from "react-router-dom";
 
-const routeConfig = [
+const routeConfig = createBrowserRouter([
   {
     path: "/",
-    element: Login,
-  },
-  {
-    path: "/task",
-    element: Task,
-  },
-  {
-    path: "/dashboard",
-    element: Dashboard,
+    Component: Layout,
+    children: [
+      { path: "dashboard", Component: Dashboard },
+      { path: "task", Component: Task },
+    ],
   },
   {
     path: "/login",
-    element: Login,
+    Component: Login,
   },
-];
+]);
 
 export default routeConfig;
