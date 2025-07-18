@@ -3,9 +3,10 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import UnoCSS from "unocss/vite";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import { loadEnv } from "vite";
 // https://vite.dev/config/
 const ROOT_PATH = process.cwd();
-console.log(ROOT_PATH);
+const env = loadEnv(process.env.NODE_ENV || "development", process.cwd(), "");
 
 export default defineConfig({
   plugins: [
@@ -26,6 +27,15 @@ export default defineConfig({
       less: {
         javascriptEnabled: true,
         additionalData: `@import '@/styles/variables.less';`,
+      },
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: env.VITE_API_URL,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

@@ -1,0 +1,46 @@
+.statistic-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 200px;
+  box-shadow: @shadow-sm;
+  &:hover {
+    background-color: @hover-light;
+  }
+
+  .card-title {
+    color: @text-secondary;
+    font-size: @font-size-sm;
+  }
+
+  .card-value {
+    font-size: @font-size-lg;
+    font-weight: bold;
+    color: @text-primary;
+    margin: 10px 0;
+  }
+
+  .card-footer {
+    font-size: @font-size-sm;
+    color: @text-secondary;
+  }
+
+  // 不同类型的样式
+  &.primary {
+    .card-value {
+      color: @theme-primary;
+    }
+  }
+
+  &.success {
+    .card-value {
+      color: @text-done;
+    }
+  }
+
+  &.warning {
+    .card-value {
+      color: @text-todo;
+    }
+  }
+}

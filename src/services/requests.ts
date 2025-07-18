@@ -1,49 +1,51 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { message } from "antd";
 
-class Requests {
-  private instance: AxiosInstance;
-  public constructor(config: AxiosRequestConfig) {
+export default class Requests {
+  instance: AxiosInstance;
+
+  constructor(config: AxiosRequestConfig) {
     this.instance = axios.create(config);
-    this.instance.interceptors.request.use(
-      (config) => {
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
+
     this.instance.interceptors.response.use(
-      (response: AxiosResponse) => {
+      (response) => {
         if (response.data && response.data.code === 200) {
           return response.data.data;
         }
         return response.data;
       },
       (error) => {
+        message.error(error.response.data.message);
         return Promise.reject(error);
       }
     );
   }
 
-  public get<T>(url: string, params: any): Promise<T> {
-    return this.instance
-      .get<T>(url, { params })
-      .then((res) => res as unknown as T);
+  request<T = any>(config: AxiosRequestConfig): Promise<T> {
+    return this.instance.request(config);
   }
 
-  public post<T>(url: string, data: any) {
-    return this.instance.post<T>(url, data).then((res) => res as unknown as T);
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.instance.get(url, config);
   }
 
-  public put<T>(url: string, data: any) {
-    return this.instance.put<T>(url, data).then((res) => res as unknown as T);
+  post<T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    return this.instance.post(url, data, config);
   }
 
-  public delete<T>(url: string, params: any) {
-    return this.instance
-      .delete<T>(url, { params })
-      .then((res) => res as unknown as T);
+  put<T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    return this.instance.put(url, data, config);
+  }
+
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.instance.delete(url, config);
   }
 }
-
-export default Requests;

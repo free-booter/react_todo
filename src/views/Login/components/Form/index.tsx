@@ -2,6 +2,9 @@ import { Button, Checkbox, Form, Input, message } from "antd";
 import "./index.less";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { reqLogin, reqSendCode } from "@/services/api/login";
+import { useNavigate } from "react-router-dom";
+import useUserStore, { UserState } from "@/store/user";
 
 type FieldType = {
   email?: string;
@@ -11,18 +14,29 @@ type FieldType = {
 };
 
 export default function LoginForm() {
-
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
   const [isCodeLogin, setIsCodeLogin] = useState(true);
+  // 处理登录类型
+  const handleChangeLoginType = () => {
+    // 清除验证码和密码输入框以及校验
+    useForm.resetFields(["code", "password"]);
+    setIsCodeLogin(!isCodeLogin);
+  };
   // 处理倒计时
   const [countdown, setCountdown] = useState(0);
   const handleSendCode = async () => {
     // 触发邮箱校验
     const { error } = await useForm.validateFields(["email"]);
     if (error) return;
+    if (countdown !== 0) return;
 
-    if (countdown === 0) {
-      setCountdown(60);
-    }
+    reqSendCode({ email: useForm.getFieldValue("email") }).then(() => {
+      messageApi.success("已发送验证码");
+      if (countdown === 0) {
+        setCountdown(60);
+      }
+    });
   };
   useEffect(() => {
     if (countdown > 0) {
@@ -33,12 +47,31 @@ export default function LoginForm() {
   }, [countdown]);
   // 处理登录
   const [useForm] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const { setUserInfo, setToken } = useUserStore() as UserState;
   const handleLogin = () => {
-    console.log("登录", useForm.getFieldsValue());
+    setLoading(true);
+    reqLogin({
+      email: useForm.getFieldValue("email"),
+      password: useForm.getFieldValue("password"),
+      code: useForm.getFieldValue("code")
+        ? Number(useForm.getFieldValue("code"))
+        : undefined,
+    })
+      .then((res) => {
+        messageApi.success("登录成功");
+        setUserInfo(res.userInfo);
+        setToken(res.token);
+        navigate("/");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <div className="login-form">
+      {contextHolder}
       <Form
         name="basic"
         layout="vertical"
@@ -56,38 +89,50 @@ export default function LoginForm() {
             { type: "email", message: "请输入正确的邮箱!" },
           ]}
         >
-          <Input prefix={<MailOutlined />} placeholder="请输入邮箱" />
+          <Input
+            prefix={<MailOutlined style={{ color: "#6200ea" }} />}
+            placeholder="请输入邮箱"
+          />
         </Form.Item>
 
-        {
-          isCodeLogin ? (
-            <Form.Item<FieldType>
-              label="验证码"
-              name="code"
-              rules={[
-                { required: true, message: "请输入验证码!" },
-                { min: 6, message: "验证码长度不能小于6位!" },
-              ]}
-            >
-              <div className="flex items-center">
-                <Input prefix={<LockOutlined />} placeholder="请输入验证码" />
-                <Button className="ml-2" onClick={handleSendCode}>{countdown > 0 ? `${countdown}s后重新获取` : "获取验证码"}</Button>
-              </div>
-            </Form.Item>
-          ) : (
-            <Form.Item<FieldType>
-              label="密码"
-              name="password"
-              rules={[
-                { required: true, message: "请输入密码!" },
-                { min: 6, message: "密码长度不能小于6位!" },
-              ]}
-            >
-              <Input.Password prefix={<LockOutlined />} placeholder="请输入密码" />
-            </Form.Item>
-          )
-        }
-
+        {isCodeLogin ? (
+          <Form.Item<FieldType>
+            label="验证码"
+            name="code"
+            rules={[
+              { required: true, message: "请输入验证码!" },
+              { min: 6, message: "验证码长度不能小于6位!" },
+            ]}
+          >
+            <div className="flex items-center">
+              <Input
+                prefix={<LockOutlined style={{ color: "#6200ea" }} />}
+                placeholder="请输入验证码"
+              />
+              <Button
+                className="ml-2"
+                onClick={handleSendCode}
+                style={{ color: "#6200ea" }}
+              >
+                {countdown > 0 ? `${countdown}s后重新获取` : "获取验证码"}
+              </Button>
+            </div>
+          </Form.Item>
+        ) : (
+          <Form.Item<FieldType>
+            label="密码"
+            name="password"
+            rules={[
+              { required: true, message: "请输入密码!" },
+              { min: 6, message: "密码长度不能小于6位!" },
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined style={{ color: "#6200ea" }} />}
+              placeholder="请输入密码"
+            />
+          </Form.Item>
+        )}
 
         <Form.Item<FieldType>
           name="remember"
@@ -96,17 +141,24 @@ export default function LoginForm() {
         >
           <div className="flex justify-between items-center">
             <Checkbox>记住我</Checkbox>
-            <Button type="link" onClick={() => setIsCodeLogin(!isCodeLogin)} style={{ color: "#6200ea" }}>
+            <Button
+              type="link"
+              onClick={handleChangeLoginType}
+              style={{ color: "#6200ea" }}
+            >
               {isCodeLogin ? "密码登录" : "验证码登录"}
             </Button>
           </div>
         </Form.Item>
 
         <Form.Item label={null}>
-          <Button className="w-full" type="primary" htmlType="submit">
-            {
-              isCodeLogin ? "登录 / 注册" : "登录"
-            }
+          <Button
+            className="w-full"
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+          >
+            {isCodeLogin ? "登录 / 注册" : "登录"}
           </Button>
         </Form.Item>
       </Form>

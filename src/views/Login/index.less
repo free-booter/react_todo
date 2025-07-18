@@ -1,28 +1,104 @@
+@import "../../styles/variables.less";
+
 .login-page {
-  width: 100vw;
-  height: 100vh;
-  min-height: 700px;
+  position: relative;
+  display: flex;
   align-items: center;
-  padding: 0 5vw;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: @spacing-lg;
+  overflow: hidden;
   box-sizing: border-box;
+  background: linear-gradient(135deg, #f4f0ff 0%, @white 100%);
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 1000px;
+    height: 1000px;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      fade(@purple-light, 20%) 0%,
+      fade(@purple-light, 10%) 100%
+    );
+    top: -400px;
+    right: -400px;
+    z-index: @z-index-base;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      fade(@purple-light, 15%) 0%,
+      fade(@purple-light, 5%) 100%
+    );
+    bottom: -300px;
+    left: -300px;
+    z-index: @z-index-base;
+  }
+}
+
+.login-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: @spacing-lg;
+  position: relative;
+  z-index: @z-index-base;
+
+  img {
+    max-width: 90%;
+    height: auto;
+    filter: drop-shadow(0 20px 30px fade(@purple-light, 20%));
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+.login-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: @z-index-base;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: @screen-md) {
+  .login-page {
+    flex-direction: column;
+    padding: @spacing-base;
+  }
 
   .login-left {
-    flex: 1;
-    text-align: center;
+    padding: @spacing-base;
 
     img {
-      width: 65%;
-    }
-
-    .login-left-text {
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 600;
-      }
+      max-width: 70%;
     }
   }
 
   .login-right {
-    flex: 1;
+    width: 100%;
+    padding: @spacing-base;
   }
 }

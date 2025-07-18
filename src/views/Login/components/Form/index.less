@@ -1,5 +1,107 @@
+@import "../../../../styles/variables.less";
+
 .login-form {
-    .ant-form-item {
-        margin-bottom: 10px;
+  width: 100%;
+
+  .form-item {
+    margin-bottom: @spacing-lg;
+    position: relative;
+
+    label {
+      display: block;
+      margin-bottom: @spacing-sm;
+      color: @text-secondary;
+      font-size: @font-size-sm;
+      font-weight: @font-weight-medium;
     }
+
+    input {
+      width: 100%;
+      padding: @spacing-base - 4px @spacing-base;
+      border: 1px solid fade(@purple-light, 20%);
+      border-radius: @border-radius-lg;
+      background: fade(@white, 90%);
+      font-size: @font-size-base;
+      color: @text-primary;
+      transition: @transition-base;
+
+      &:focus {
+        outline: none;
+        border-color: @purple-light;
+        box-shadow: 0 0 0 4px fade(@purple-light, 10%);
+      }
+
+      &::placeholder {
+        color: @text-light;
+      }
+    }
+
+    &.required label::after {
+      content: "*";
+      color: @error-color;
+      margin-left: @spacing-xs;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: @spacing-lg;
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: @spacing-sm;
+      color: @text-secondary;
+      font-size: @font-size-sm;
+
+      input[type="checkbox"] {
+        width: @spacing-base;
+        height: @spacing-base;
+        border-radius: @border-radius-sm;
+        border: 1px solid fade(@purple-light, 30%);
+        cursor: pointer;
+
+        &:checked {
+          background-color: @purple-light;
+          border-color: @purple-light;
+        }
+      }
+    }
+
+    .forgot-password {
+      color: @primary-color;
+      font-size: @font-size-sm;
+      text-decoration: none;
+      transition: @transition-base;
+
+      &:hover {
+        color: @purple-dark;
+      }
+    }
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: @spacing-base - 2px;
+    margin-top: @spacing-lg;
+    background: @primary-gradient;
+    color: @white;
+    border: none;
+    border-radius: @border-radius-lg;
+    font-size: @font-size-base;
+    font-weight: @font-weight-medium;
+    cursor: pointer;
+    transition: @transition-base;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px fade(@primary-color, 20%);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
 }
