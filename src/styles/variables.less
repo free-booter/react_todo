@@ -128,9 +128,10 @@
 @spacing-xxl: 40px;
 
 // 阴影
-@shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-@shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-@shadow-lg: 0 10px 30px rgba(167, 139, 250, 0.1);
+@shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+@shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+@shadow-lg:0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
 // 过渡
 @transition-all: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -138,9 +139,6 @@
   background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
   border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 @transition-base: all 0.2s ease;
-
-// 边框
-@border-width: 1px;
 
 // 卡片样式
 @card-padding: @spacing-base;
@@ -152,11 +150,14 @@
 .status-card-mixin() {
   padding: @card-padding;
   border-radius: @card-radius;
+  border: 1px solid @border-light;
   box-shadow: @shadow-base;
   transition: @transition-all;
 
   &:hover {
+    cursor: pointer;
     box-shadow: @shadow-md;
+    transform: translateY(-2px);
   }
 }
 

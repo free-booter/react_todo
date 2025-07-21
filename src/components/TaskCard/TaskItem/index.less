@@ -1,10 +1,34 @@
 .task-item {
+  position: relative;
   width: 100%;
   margin-bottom: 10px;
   box-sizing: border-box;
   overflow: hidden;
   .status-card-mixin();
+  padding-left: 20px;
   border-radius: @border-radius-xl;
+  transition: @transition-all;
+  &.high {
+    .task-item__flag {
+      .generate-background-color(@flag-high, 0.1, "light");
+      color: @flag-high;
+    }
+    border-left: 4px solid @flag-high;
+  }
+  &.medium {
+    .task-item__flag {
+      .generate-background-color(@flag-medium, 0.1, "light");
+      color: @flag-medium;
+    }
+    border-left: 4px solid @flag-medium;
+  }
+  &.low {
+    .task-item__flag {
+      .generate-background-color(@flag-low, 0.1, "light");
+      color: @flag-low;
+    }
+    border-left: 4px solid @flag-low;
+  }
   &__header {
     display: flex;
     .task-item__title {
@@ -32,18 +56,6 @@
     margin-right: 10px;
     border-radius: 10px;
     font-size: @font-size-xs;
-    &.high {
-      .generate-background-color(@flag-high, 0.1, "light");
-      color: @flag-high;
-    }
-    &.medium {
-      .generate-background-color(@flag-medium, 0.1, "light");
-      color: @flag-medium;
-    }
-    &.low {
-      .generate-background-color(@flag-low, 0.1, "light");
-      color: @flag-low;
-    }
   }
   &__content {
     margin: 15px 0;

@@ -76,7 +76,8 @@ export default function TaskItem({ data }: { data: TodoListItem }) {
   }, [status]);
   return (
     <>
-      <div className="task-item">
+      <div className={`task-item ${priorityClassName[data.priority - 1].value
+        }`}>
         <div className="task-item__header flex items-center">
           {data.status !== 3 && changeStatusStyle()}
           {/* 标题 */}
@@ -85,9 +86,7 @@ export default function TaskItem({ data }: { data: TodoListItem }) {
           <div className="task-item__more flex items-center">
             {/* 优先级 */}
             <div
-              className={`task-item__flag ${
-                priorityClassName[data.priority - 1].value
-              }`}
+              className="task-item__flag"
             >
               {priorityClassName[data.priority - 1].label}
             </div>

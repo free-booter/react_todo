@@ -28,14 +28,14 @@ export default function TaskModal({
   const initialValues =
     type === "add"
       ? {
-          dateType: 1,
-          date: dayjs(),
-        }
+        dateType: 1,
+        date: dayjs(),
+      }
       : {
-          ...data,
-          dateType: 1,
-          date: data.date ? dayjs(data.date) : undefined,
-        };
+        ...data,
+        dateType: 1,
+        date: data.date ? dayjs(data.date) : undefined,
+      };
 
   const [form] = Form.useForm();
   const dateType = Form.useWatch("dateType", form);
@@ -114,13 +114,13 @@ export default function TaskModal({
                 { label: "高", value: TaskPriority.HIGH },
                 { label: "中", value: TaskPriority.MEDIUM },
                 { label: "低", value: TaskPriority.LOW },
+                { label: "无", value: TaskPriority.NONE },
               ]}
             ></Radio.Group>
           </Form.Item>
           <Form.Item
             label="标签"
             name="tags"
-            rules={[{ required: true, message: "请选择至少一个标签" }]}
           >
             <Select
               mode="multiple"
@@ -199,19 +199,6 @@ export default function TaskModal({
             </Form.Item>
           )}
 
-          {[3, 4].includes(dateType) && (
-            <Form.Item
-              label="具体时间"
-              name="time"
-              rules={[{ required: true, message: "请选择具体时间" }]}
-            >
-              <DatePicker.TimePicker
-                format="HH:mm"
-                placeholder="选择时间点"
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-          )}
 
           <Form.Item
             label="提醒设置"

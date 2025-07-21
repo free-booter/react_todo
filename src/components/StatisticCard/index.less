@@ -4,9 +4,13 @@
   padding: 16px;
   min-width: 200px;
   box-shadow: @shadow-sm;
+  transition: @transition-all;
   &:hover {
-    background-color: @hover-light;
+    cursor: pointer;
+    box-shadow: @shadow-base;
+    transform: translateY(-2px);
   }
+}
 
   .card-title {
     color: @text-secondary;
@@ -14,7 +18,7 @@
   }
 
   .card-value {
-    font-size: @font-size-lg;
+    font-size: @font-size-xl;
     font-weight: bold;
     color: @text-primary;
     margin: 10px 0;
@@ -22,7 +26,7 @@
 
   .card-footer {
     font-size: @font-size-sm;
-    color: @text-secondary;
+    color: @text-tertiary;
   }
 
   // 不同类型的样式
@@ -43,4 +47,3 @@
       color: @text-todo;
     }
   }
-}

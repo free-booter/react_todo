@@ -7,4 +7,4 @@ import { TodoListReq, TodoListRes } from "./type";
  * @returns 待办列表
  */
 export const reqTodoList = (data: TodoListReq): Promise<TodoListRes> =>
-  request.get<TodoListRes>("/todo/list", data);
+  request.get<TodoListRes>("/task/list", data);

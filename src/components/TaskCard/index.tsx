@@ -104,7 +104,9 @@ export default function TaskCard({
           ))}
         </div>
       </Card>
-      {/* <TaskModal type="add" open={open} close={() => setOpen(false)} /> */}
+      <TaskModal data={
+        taskList[0]
+      } type="add" open={open} close={() => setOpen(false)} />
     </>
   );
 }
