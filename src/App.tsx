@@ -1,4 +1,4 @@
-import { Outlet, RouterProvider, useRoutes } from "react-router-dom";
+import { RouterProvider } from "react-router";
 import { ConfigProvider } from "antd";
 import routeConfig from "./router";
 function App() {
@@ -11,12 +11,7 @@ function App() {
           },
         }}
       >
-        <RouterProvider
-          future={{
-            v7_startTransition: true,
-          }}
-          router={routeConfig}
-        />
+        <RouterProvider router={routeConfig} />
       </ConfigProvider>
     </>
   );

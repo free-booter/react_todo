@@ -3,7 +3,7 @@ import "./index.less";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { reqLogin, reqSendCode } from "@/services/api/login";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import useUserStore, { UserState } from "@/store/user";
 
 type FieldType = {
