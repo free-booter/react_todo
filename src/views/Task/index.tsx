@@ -3,68 +3,41 @@ import "./index.less";
 import { Progress } from "antd";
 import SvgIcon from "@/components/SvgIcon";
 import TaskCard from "@/components/TaskCard";
-import { TaskItem, TaskPriority, TaskStatus } from "@/types/task";
-import { useState } from "react";
+import { TaskStatus } from "@/types/task";
+import { useEffect } from "react";
+import { reqTodoList } from "@/services/api/home";
+import { useTaskStore } from "@/store/task";
 
+export const statusList = [
+  { label: "todo", value: TaskStatus.todo },
+  { label: "doing", value: TaskStatus.doing },
+  { label: "done", value: TaskStatus.done },
+];
 export default function Task() {
-  const [taskList] = useState<TaskItem[]>([
-    {
-      id: 1,
-      title: "学习react基础语法",
-      description:
-        "学习react基础语法，包括组件、状态、事件等。学会自己封装组件。使用antd组件库。自己写一个项目。并将其记录到github上。顺便可以学习下typescript。",
-      tags: ["学习", "前端", "react"],
-      date: "2025-05-29",
-      status: TaskStatus.todo,
-      isDone: false,
-      priority: TaskPriority.HIGH,
-      dateType: 1,
-      remindType: 1,
-      repeatType: 0,
-    },
-    {
-      id: 2,
-      title: "学习Vue基础语法",
-      description:
-        "学习Vue基础语法，包括组件、状态、事件等。学会自己封装组件。使用antd组件库。自己写一个项目。并将其记录到github上。顺便可以学习下typescript。",
-      tags: ["学习", "前端", "vue"],
-      date: "2025-05-29",
-      status: "todo",
-      isDone: false,
-      priority: TaskPriority.MEDIUM,
-      dateType: 1,
-      remindType: 1,
-      repeatType: 0,
-    },
-    {
-      id: 3,
-      title: "学习Vue基础语法",
-      description:
-        "学习Vue基础语法，包括组件、状态、事件等。学会自己封装组件。使用antd组件库。自己写一个项目。并将其记录到github上。顺便可以学习下typescript。",
-      tags: ["学习", "前端", "vue"],
-      date: "2025-05-29",
-      status: "todo",
-      isDone: false,
-      priority: TaskPriority.LOW,
-      dateType: 1,
-      remindType: 1,
-      repeatType: 0,
-    },
-    {
-      id: 4,
-      title: "学习Vue基础语法",
-      description:
-        "学习Vue基础语法，包括组件、状态、事件等。学会自己封装组件。使用antd组件库。自己写一个项目。并将其记录到github上。顺便可以学习下typescript。",
-      tags: ["学习", "前端", "vue"],
-      date: "2025-05-29",
-      status: "todo",
-      isDone: false,
-      priority: TaskPriority.MEDIUM,
-      dateType: 1,
-      remindType: 1,
-      repeatType: 0,
-    },
-  ]);
+  const taskStore = useTaskStore();
+  const getAllTaskList = () => {
+    // 获取3种状态的任务列表
+    Promise.all(
+      statusList.map((status) =>
+        reqTodoList({
+          current: 1,
+          size: 10,
+          status: status.value,
+        })
+      )
+    ).then((results) => {
+      taskStore.setTaskListMap({
+        todo: results[0],
+        doing: results[1],
+        done: results[2],
+      });
+    });
+  };
+
+  useEffect(() => {
+    getAllTaskList();
+  }, []);
+
   return (
     <div className="task-page">
       <div className="task-header grid grid-cols-4 gap-4">
@@ -140,7 +113,7 @@ export default function Task() {
         <TaskCard
           data={{
             title: "待处理",
-            taskList,
+            taskList: taskStore.taskListMap.todo.list,
             icon: "task-todo",
             color: "#faad14",
           }}
@@ -148,7 +121,7 @@ export default function Task() {
         <TaskCard
           data={{
             title: "正在进行",
-            taskList,
+            taskList: taskStore.taskListMap.doing.list,
             icon: "task-doing",
             color: "#0958d9",
           }}
@@ -156,7 +129,7 @@ export default function Task() {
         <TaskCard
           data={{
             title: "已完成",
-            taskList,
+            taskList: taskStore.taskListMap.done.list,
             icon: "task-check-circle",
             color: "#52c41a",
           }}

@@ -1,11 +1,20 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { message } from "antd";
+import useUserStore from "@/store/user";
 
 export default class Requests {
   instance: AxiosInstance;
 
   constructor(config: AxiosRequestConfig) {
     this.instance = axios.create(config);
+
+    this.instance.interceptors.request.use((config) => {
+      const token = useUserStore.getState().token;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
 
     this.instance.interceptors.response.use(
       (response) => {

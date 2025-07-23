@@ -1,4 +1,4 @@
-import { TodoDetail, TaskPriority } from "@/types/task";
+import { TaskPriority } from "@/types/task";
 import "./index.less";
 import SvgIcon from "@/components/SvgIcon";
 import { SunOutlined } from "@ant-design/icons";
@@ -8,23 +8,30 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Modal,
   Radio,
   Select,
 } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { reqUpdateTodo, reqTodoDetail } from "@/services/api/home";
+import { TodoDetail } from "@/services/api/home/type";
 export default function TaskModal({
-  data = {} as TodoDetail,
+  id,
   type = "add",
   open,
   close,
 }: {
-  data: TodoDetail;
+  id: number;
   type: "add" | "edit";
   open: boolean;
   close: () => void;
 }) {
+
+  const [messageApi, contextHolder] = message.useMessage();
+  const [data, setData] = useState<TodoDetail | null>(null);
+
   const initialValues =
     type === "add"
       ? {
@@ -34,8 +41,8 @@ export default function TaskModal({
       : {
         ...data,
         dateType: 1,
-        date: data.date ? dayjs(data.date) : undefined,
-      };
+        date: data?.date ? dayjs(data.date) : undefined,
+      } as any;
 
   const [form] = Form.useForm();
   const dateType = Form.useWatch("dateType", form);
@@ -43,8 +50,10 @@ export default function TaskModal({
   const advanceType = Form.useWatch("advanceType", form);
 
   useEffect(() => {
-    if (open && type === "edit") {
-      form.setFieldsValue(initialValues);
+    if (open && type === "edit" && id) {
+      reqTodoDetail(id).then((res) => {
+        form.setFieldsValue(res);
+      });
     }
   }, [open]);
 
@@ -54,16 +63,25 @@ export default function TaskModal({
   const handleConfirm = () => {
     if (type === "add") {
       form.validateFields().then((values) => {
-        console.log(values, "新增");
+        console.log({ ...values, remindTime: values.remindTime?.format('HH:mm') }, "新增");
       });
     } else {
       form.validateFields().then((values) => {
-        console.log(values, "编辑");
+        const params = {
+          ...values,
+          remindTime: values.remindTime?.format('HH:mm'),
+          id
+        }
+        reqUpdateTodo(params).then((res: any) => {
+          messageApi.success("编辑成功")
+          hideModal();
+        });
       });
     }
   };
   return (
     <div className="task-modal">
+      {contextHolder}
       <Modal
         title="任务详情"
         open={open}
@@ -111,14 +129,14 @@ export default function TaskModal({
             <Radio.Group
               buttonStyle="solid"
               options={[
-                { label: "高", value: TaskPriority.HIGH },
-                { label: "中", value: TaskPriority.MEDIUM },
-                { label: "低", value: TaskPriority.LOW },
                 { label: "无", value: TaskPriority.NONE },
+                { label: "低", value: TaskPriority.LOW },
+                { label: "中", value: TaskPriority.MEDIUM },
+                { label: "高", value: TaskPriority.HIGH },
               ]}
             ></Radio.Group>
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="标签"
             name="tags"
           >
@@ -128,12 +146,12 @@ export default function TaskModal({
               showSearch
               placeholder="选择或输入标签，最多3个"
               optionFilterProp="label"
-              options={data.tags?.map((tag) => ({
+              options={data?.tagIds?.map((tag) => ({
                 value: tag,
                 label: tag,
               }))}
             />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             label="时间设置"
@@ -235,7 +253,7 @@ export default function TaskModal({
               {advanceType === 1 && (
                 <Form.Item
                   label="提前时间"
-                  name="advanceHours"
+                  name="advanceValue"
                   rules={[{ required: true, message: "请输入提前小时数" }]}
                 >
                   <InputNumber
@@ -251,7 +269,7 @@ export default function TaskModal({
               {advanceType === 2 && (
                 <Form.Item
                   label="提前时间"
-                  name="advanceDays"
+                  name="advanceValue"
                   rules={[{ required: true, message: "请输入提前天数" }]}
                 >
                   <InputNumber
@@ -267,7 +285,7 @@ export default function TaskModal({
               {advanceType === 3 && (
                 <Form.Item
                   label="提前时间"
-                  name="advanceWeeks"
+                  name="advanceValue"
                   rules={[{ required: true, message: "请输入提前周数" }]}
                 >
                   <InputNumber
