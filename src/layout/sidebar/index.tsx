@@ -9,6 +9,7 @@ const Sidebar: React.FC = () => {
   const menuItems = [
     { path: "/task", label: "Task" },
     { path: "/dashboard", label: "Dashboard" },
+    { path: "/calendar", label: "Calendar" },
   ];
 
   return (

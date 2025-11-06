@@ -1,6 +1,6 @@
 export interface BasePageReq {
-  current: number;
-  size: number;
+  current?: number;
+  size?: number;
 }
 export interface BasePageRes<T> {
   list: T[];

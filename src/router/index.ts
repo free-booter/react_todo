@@ -1,6 +1,7 @@
 import Login from "@/views/Login";
 import Dashboard from "@/views/Dashboard";
 import Task from "@/views/Task";
+import Calendar from "@/views/Calendar";
 import Layout from "@/layout";
 import { createBrowserRouter, redirect } from "react-router";
 
@@ -15,6 +16,7 @@ const routeConfig = createBrowserRouter([
       },
       { path: "dashboard", Component: Dashboard },
       { path: "task", Component: Task },
+      { path: "calendar", Component: Calendar },
     ],
   },
   {

@@ -1,4 +1,16 @@
 @import url("./functions.less");
+
+:root {
+  // --primary-color: @primary-color;
+  --primary-color: 67 56 202;
+  --error-color: @error-color;
+  --bg-base: @bg-base;
+  --text-primary: @text-primary;
+  --text-secondary: @text-secondary;
+  --text-tertiary: @text-tertiary;
+  --gray-color: @bg-gray;
+}
+
 // 主题色系统
 @theme-primary: #6200ea; // 主色调：深紫色
 @theme-secondary: #7e3ff2; // 次要色：中紫色
@@ -34,12 +46,6 @@
 @danger: #ef4444; // 危险色：红色
 @info: #3b82f6; // 信息色：蓝色
 
-// 任务卡片背景色
-@bg-card-todo: #f3f4f6; // 待办：浅灰
-@bg-card-progress: #fdf6b2; // 进行中：浅黄
-@bg-card-review: #e0e7ff; // 审核中：浅紫蓝
-@bg-card-done: #d1fae5; // 已完成：浅绿
-
 // 边框颜色
 @border-color: @border-light; // 保持向后兼容
 @border-light: #e5e7eb; // 浅色边框
@@ -68,6 +74,7 @@
 @bg-todo: #e3f0ff;
 @bg-progress: #e6f4ff;
 @bg-done: #f6ffed;
+@bg-gray: #f5f5f5;
 
 // 文字颜色
 @text-primary: #1f2937; // 主要文字：深灰
@@ -80,9 +87,10 @@
 @text-done: #52c41a;
 
 // 旗帜颜色
-@flag-high: #ff4d4f;
+@flag-high: #ef4444;
 @flag-medium: #faad14;
 @flag-low: #52c41a;
+@flag-none: #8c9eff;
 
 // 字体家族
 @font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,

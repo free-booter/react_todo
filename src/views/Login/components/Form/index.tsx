@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { reqLogin, reqSendCode } from "@/services/api/login";
 import { useNavigate } from "react-router";
 import useUserStore, { UserState } from "@/store/user";
+import { localCache } from "@/utils/cache";
 
 type FieldType = {
   email?: string;
@@ -45,6 +46,32 @@ export default function LoginForm() {
       setCountdown(0);
     }
   }, [countdown]);
+  useEffect(() => {
+    const loginForm = localCache.getCache("loginForm");
+    if (loginForm) {
+      const { email, password, type } = loginForm;
+      useForm.setFieldsValue({
+        email,
+        password,
+        remember: true,
+      });
+      setIsCodeLogin(type);
+    }
+  }, []);
+  const handleRemember = () => {
+    if (!useForm.getFieldValue("remember")) {
+      localCache.deleteCache("loginForm");
+      return;
+    }
+    localCache.setCache("loginForm", {
+      type: isCodeLogin,
+      email: useForm.getFieldValue("email"),
+      password: useForm.getFieldValue("password"),
+      code: useForm.getFieldValue("code")
+        ? Number(useForm.getFieldValue("code"))
+        : undefined,
+    });
+  };
   // 处理登录
   const [useForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -54,11 +81,9 @@ export default function LoginForm() {
     reqLogin({
       email: useForm.getFieldValue("email"),
       password: useForm.getFieldValue("password"),
-      code: useForm.getFieldValue("code")
-        ? Number(useForm.getFieldValue("code"))
-        : undefined,
     })
       .then((res) => {
+        handleRemember();
         messageApi.success("登录成功");
         setUserInfo(res.userInfo);
         setToken(res.token);
@@ -134,13 +159,15 @@ export default function LoginForm() {
           </Form.Item>
         )}
 
-        <Form.Item<FieldType>
-          name="remember"
-          valuePropName="checked"
-          label={null}
-        >
+        <Form.Item label={null}>
           <div className="flex justify-between items-center">
-            <Checkbox>记住我</Checkbox>
+            <Form.Item<FieldType>
+              name="remember"
+              valuePropName="checked"
+              noStyle
+            >
+              <Checkbox>记住我</Checkbox>
+            </Form.Item>
             <Button
               type="link"
               onClick={handleChangeLoginType}
