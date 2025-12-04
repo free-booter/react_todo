@@ -3,15 +3,18 @@ import TaskCard from "../../TaskCard";
 import { ReactNode, useState } from "react";
 import { useTaskContext } from "@/views/Task/context";
 import { PlusOutlined } from "@ant-design/icons";
+import { TaskStatus } from "@/types/task";
 
 function TaskColumn({
   todos,
   title,
   icon,
+  status,
 }: {
   title: string;
   icon: ReactNode;
   todos: Todo[];
+  status: TaskStatus;
 }) {
   const [placeholderId, setPlaceholderId] = useState<number | null>(null);
 
@@ -35,12 +38,17 @@ function TaskColumn({
   };
 
   // 事件在元素或文本选择被放置到有效的放置目标上时触发
-  const { onReorder, openModal } = useTaskContext();
+  const { openModal, onReorder } = useTaskContext();
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const todoId = e.dataTransfer.getData("todo-id");
-    if (todoId && placeholderId) {
-      onReorder(Number(todoId), Number(placeholderId));
+    if (todoId) {
+      // 如果有 placeholderId 则使用它，否则说明是空列表，直接传状态
+      onReorder(
+        Number(todoId),
+        placeholderId ? Number(placeholderId) : null,
+        status
+      );
     }
     setPlaceholderId(null);
   };
@@ -58,18 +66,24 @@ function TaskColumn({
         <div className="p-1 rounded-lg  ml-auto cursor-pointer hover:bg-gray-1">
           <PlusOutlined
             className="color-gray"
-            onClick={() => openModal("add")}
+            onClick={() => openModal("add", { status })}
           />
         </div>
       </div>
-      {todos.map((todo) => (
-        <div key={todo.id}>
-          {placeholderId === todo.id && (
-            <div className="h-2 bg-primary/30 rounded-full my-1 transition-all duration-200 mb-4"></div>
-          )}
-          <TaskCard todo={todo} />
+      {todos.length === 0 ? (
+        <div className="h-24 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm">
+          拖拽任务到这里
         </div>
-      ))}
+      ) : (
+        todos.map((todo) => (
+          <div key={todo.id}>
+            {placeholderId === todo.id && (
+              <div className="h-2 bg-primary/30 rounded-full my-1 transition-all duration-200 mb-4"></div>
+            )}
+            <TaskCard todo={todo} />
+          </div>
+        ))
+      )}
     </div>
   );
 }

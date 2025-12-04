@@ -1,30 +1,19 @@
 import { RouterProvider } from "react-router";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, message } from "antd";
 import zhCN from "antd/locale/zh_CN";
-import "dayjs/locale/zh-cn";
+import { MessageContext } from "./context/MessageContext";
 import routeConfig from "./router";
+
 function App() {
+  const [messageApi, contextHolder] = message.useMessage();
+
   return (
-    <>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: "#6200EA",
-          },
-          components: {
-            Segmented: {
-              itemSelectedColor: "#6200EA",
-              itemColor: "#4b5563",
-              itemHoverColor: "#6200EA",
-              itemHoverBg: "transparent",
-            },
-          },
-        }}
-        locale={zhCN}
-      >
+    <ConfigProvider locale={zhCN}>
+      <MessageContext.Provider value={messageApi}>
+        {contextHolder}
         <RouterProvider router={routeConfig} />
-      </ConfigProvider>
-    </>
+      </MessageContext.Provider>
+    </ConfigProvider>
   );
 }
 

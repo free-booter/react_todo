@@ -1,21 +1,24 @@
 import { Button, Input } from "antd";
 import "./index.less";
-import {
-  BellOutlined,
-  SettingOutlined,
-  PlusOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { BellOutlined, SettingOutlined, PlusOutlined } from "@ant-design/icons";
 import useUserStore, { UserState } from "@/store/user";
 import HeaderDropdown from "./dropdown";
 import TaskModal from "@/components/TaskFormModal";
 import { useState } from "react";
+import { SearchProps } from "antd/es/input";
+import { useTaskStore } from "@/store/task";
 
 export default function Header() {
   const { userInfo } = useUserStore() as UserState;
   const [open, setOpen] = useState(false);
   const openModal = () => {
     setOpen(true);
+  };
+  const { getTaskAllList } = useTaskStore();
+  const handleSearch: SearchProps["onSearch"] = (value) => {
+    getTaskAllList({
+      keyword: value,
+    });
   };
   return (
     <>
@@ -29,10 +32,12 @@ export default function Header() {
           style={{ margin: "0 20px" }}
         >
           <div className="header-search">
-            <Input
+            <Input.Search
               placeholder="请输入任务名称"
-              prefix={<SearchOutlined style={{ color: "#6200ea" }} />}
               style={{ width: "100%" }}
+              size="large"
+              allowClear
+              onSearch={handleSearch}
             />
           </div>
           <Button

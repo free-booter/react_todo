@@ -10,6 +10,7 @@ import {
   CalendarSync,
   CircleCheck,
   CircleCheckBig,
+  ClockAlert,
   Flag,
   Repeat,
   Sparkles,
@@ -22,7 +23,7 @@ import dayjs, { ManipulateType } from "dayjs";
 import { formatDate } from "@/utils/formatDateDesc";
 import { RemindTypeConfig, RepeatTypeConfig } from "@/types/config";
 import PriorityTag from "../priorityTag";
-import { Todo, TaskStatus, RemindType } from "@/views/Task/type";
+import { Todo, RemindType } from "@/types/task";
 
 function TaskDetail({
   id,
@@ -35,13 +36,17 @@ function TaskDetail({
   close: () => void;
   getContainer?: false | HTMLElement | (() => HTMLElement);
 }) {
-  const [detail, setDetail] = useState({} as Todo);
+  const [detail, setDetail] = useState({ timeLine: {} } as Todo);
+  const [loading, setLoading] = useState<boolean>(true);
   const getTaskDetail = (id: number) => {
-    // reqTodoDetail(id).then((res) => {
-    //   setDetail(res);
-    // });
-    // const todo = dataList.find((t) => t.id === id) as Todo;
-    // setDetail(todo);
+    setLoading(true);
+    reqTodoDetail(id)
+      .then((res) => {
+        setDetail(res);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   useEffect(() => {
     if (open && id) {
@@ -57,7 +62,7 @@ function TaskDetail({
           <>
             <div className="text-slate-700 text-sm">任务创建</div>
             <div className="text-slate-500 text-xs">
-              {formatDate(detail.createdAt)}
+              {formatDate(detail?.timeLine?.createdAt)}
             </div>
           </>
         ),
@@ -91,7 +96,9 @@ function TaskDetail({
               <div className="flex items-center gap-3">
                 <div className="flex-1">
                   <div className="text-sm  text-blue-700">开始处理</div>
-                  <div className="text-xs text-blue-500">09月09日 14:30</div>
+                  <div className="text-xs text-blue-500">
+                    {formatDate(detail?.timeLine?.startedAt)}
+                  </div>
                 </div>
                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
               </div>
@@ -128,7 +135,9 @@ function TaskDetail({
               <div className="flex items-center gap-3">
                 <div className="flex-1">
                   <div className="text-sm  text-emerald-700">任务完成</div>
-                  <div className="text-xs text-emerald-500">09月09日 16:00</div>
+                  <div className="text-xs text-emerald-500">
+                    {formatDate(detail?.timeLine?.finishedAt)}
+                  </div>
                 </div>
                 <Sparkles className="w-4 h-4 text-emerald-500" />
               </div>
@@ -142,7 +151,7 @@ function TaskDetail({
 
   const renderRemindDesc = () => {
     const { createdAt, remindTime, remindType, remindOffset = 0 } = detail;
-    if (!detail.remindType) return "无";
+    if (detail.remindType === "none") return "无";
     else if (detail.remindType && detail.remindType !== "custom") {
       // 非自定义
       const RemindValueMap: Record<RemindType, number | null> = {
@@ -178,6 +187,7 @@ function TaskDetail({
         </>
       }
       open={open}
+      loading={loading}
       footer={null}
       onCancel={() => close()}
       getContainer={getContainer}
@@ -225,6 +235,17 @@ function TaskDetail({
               </span>
             </div>
           </div>
+          {detail.isOverdue && (
+            <div className="flex items-center gap-2 mt-3">
+              <div className="bg-red-100 px-2.2 py-1 pt-2 rounded-lg">
+                <ClockAlert size={16} className="color-red-500" />
+              </div>
+              <div className="flex  flex-col">
+                <span className="text-xs text-red-500">已逾期</span>
+                <span className="text-13px">24天</span>
+              </div>
+            </div>
+          )}
           <div className="flex items-center gap-2 mt-3">
             <div className="bg-blue-100 px-2.2 py-1 pt-2 rounded-lg">
               <Bell size={16} className="color-blue-500" />

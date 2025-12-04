@@ -1,11 +1,12 @@
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { Button, Checkbox, Form, Input } from "antd";
 import "./index.less";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { reqLogin, reqSendCode } from "@/services/api/login";
 import { useNavigate } from "react-router";
 import useUserStore, { UserState } from "@/store/user";
 import { localCache } from "@/utils/cache";
+import { MessageContext } from "@/context/MessageContext";
 
 type FieldType = {
   email?: string;
@@ -16,7 +17,7 @@ type FieldType = {
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
+  const messageApi = useContext(MessageContext)!;
   const [isCodeLogin, setIsCodeLogin] = useState(true);
   // 处理登录类型
   const handleChangeLoginType = () => {
@@ -96,7 +97,6 @@ export default function LoginForm() {
 
   return (
     <div className="login-form">
-      {contextHolder}
       <Form
         name="basic"
         layout="vertical"

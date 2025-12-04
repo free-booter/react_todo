@@ -1,12 +1,6 @@
-import { Todo, TodoBase } from "@/types/task";
+import { TaskStatus, Todo, TodoBase } from "@/types/task";
 import request from "../..";
-import {
-  Calendar,
-  Statistic,
-  StatisticCounts,
-  TodoListReq,
-  TodoListRes,
-} from "./type";
+import { Calendar, StatisticCounts, TodoListReq, TodoListRes } from "./type";
 
 /**
  * 获取待办列表
@@ -30,7 +24,7 @@ export const reqTodoListAll = (data?: TodoListReq): Promise<TodoListRes[]> =>
  * @param data.id 待办id
  * @returns 删除结果
  */
-export const deleteTodo = (data: { id: number }): Promise<any> =>
+export const reqDeleteTodo = (data: { id: number }): Promise<any> =>
   request.delete<any>("/task/delete", { params: data });
 
 /**
@@ -64,8 +58,10 @@ export const reqAddTodo = (data: TodoBase): Promise<any> =>
  * @param data.status 待办状态
  * @returns
  */
-export const reqUpdateTodoStatus = (data: { id: number; status: number }) =>
-  request.put<any>("/task/updateStatus", data);
+export const reqUpdateTodoStatus = (data: {
+  id: number;
+  status: TaskStatus;
+}): Promise<any> => request.put<any>("/task/updateStatus", data);
 
 /**
  * 添加标签
@@ -120,3 +116,17 @@ export const reqTaskCalender = (params: {
   endDate?: string;
   month?: string;
 }): Promise<Calendar> => request.get("/task/calendar", { params });
+
+/**
+ * 更新任务顺序
+ * @param data
+ * @param data.taskId 拖拽的任务id
+ * @param data.dropId 目标位置任务的id
+ * @param data.dropStatus 目标位置任务的状态
+ * @returns
+ */
+export const reqUpdateTaskOrder = (data: {
+  taskId: number;
+  dropId?: number;
+  dropStatus: Todo["status"];
+}) => request.patch(`/task/${data.taskId}/order`, data);

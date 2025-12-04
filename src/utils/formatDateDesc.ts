@@ -13,17 +13,21 @@ export function formatDate(d?: string): string {
 
   // 判断是否有时分秒
   const hasTime = /(\d{2}):(\d{2})(:\d{2})?/.test(d);
+  // 判断是否为今天
+  if (day.isSame(now, "day")) {
+    return hasTime ? ` 今天 ${day.format("HH:mm:ss")}` : "今天";
+  }
   if (day.isSame(now, "week")) {
     return hasTime
-      ? `${day.format("ddd")} ${day.format("HH:mm")}`
+      ? `${day.format("ddd")} ${day.format("HH:mm:ss")}`
       : day.format("ddd"); // 周几（Mon, Tue...）
   }
 
   if (day.isSame(now, "year")) {
-    return hasTime ? day.format("MM-DD HH:mm") : day.format("MM-DD");
+    return hasTime ? day.format("MM-DD HH:mm:ss") : day.format("MM-DD");
   }
 
-  return hasTime ? day.format("YYYY-MM-DD HH:mm") : day.format("YYYY-MM-DD");
+  return hasTime ? day.format("YYYY-MM-DD HH:mm:ss") : day.format("YYYY-MM-DD");
 }
 
 /**

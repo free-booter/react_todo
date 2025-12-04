@@ -3,13 +3,13 @@ import { Todo } from "../../type";
 import "./index.less";
 import TaskColumn from "./TaskColumn";
 import { ReactNode } from "react";
-import { useTaskContext } from "../../context";
+import { useTaskStore } from "@/store/task";
+import { Spin } from "antd";
 function BoardView() {
-  const { todoListMap } = useTaskContext();
+  const { todoListMap, loading } = useTaskStore();
   const todoList = todoListMap.todo.list || [];
   const inprogressList = todoListMap.inprogress.list || [];
   const doneList = todoListMap.done.list || [];
-
   const columns: {
     status: Todo["status"];
     title: string;
@@ -37,11 +37,13 @@ function BoardView() {
   ];
   return (
     <div className="board-view">
-      <div className="grid grid-cols-3 gap-x-10">
-        {columns.map((col) => (
-          <TaskColumn {...col} key={col.status} />
-        ))}
-      </div>
+      <Spin spinning={loading}>
+        <div className="grid grid-cols-3 gap-x-10">
+          {columns.map((col) => (
+            <TaskColumn {...col} key={col.status} />
+          ))}
+        </div>
+      </Spin>
     </div>
   );
 }

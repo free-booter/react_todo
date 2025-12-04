@@ -16,13 +16,19 @@ import {
   Select,
   Space,
 } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { reqUpdateTodo, reqAddTag, reqAddTodo } from "@/services/api/home";
+import {
+  reqUpdateTodo,
+  reqAddTag,
+  reqAddTodo,
+  reqTodoDetail,
+} from "@/services/api/home";
 import { RemindTypeConfig, RepeatTypeConfig } from "@/types/config";
 import { TaskPriority, Todo } from "@/views/Task/type";
-import { useTaskContext } from "@/views/Task/context";
 import { TaskStatus } from "@/types/task";
+import { useTaskStore } from "@/store/task";
+import { MessageContext } from "@/context/MessageContext";
 
 export default function TaskModal({
   id,
@@ -30,27 +36,24 @@ export default function TaskModal({
   open,
   close,
   status,
-  getContainer,
 }: {
   id?: number;
   type: "add" | "edit";
   open: boolean;
   close: () => void;
   status: TaskStatus;
-  getContainer?: false | HTMLElement | (() => HTMLElement);
 }) {
   const priorityOptions: Array<{ label: string; value: TaskPriority }> = [
     { label: "低", value: "low" },
     { label: "中", value: "medium" },
     { label: "高", value: "high" },
   ];
-  const [messageApi, contextHolder] = message.useMessage();
+  const messageApi = useContext(MessageContext)!;
   const [form] = Form.useForm<
     Todo & {
       dateRange: [Dayjs, Dayjs];
     }
   >();
-  console.log("TaskFormModal", getContainer);
 
   const dateType = Form.useWatch("dateType", form);
   const remindType = Form.useWatch("remindType", form);
@@ -60,20 +63,40 @@ export default function TaskModal({
     if (!open) return;
     if (type === "edit" && id) {
       // 获取详情
-      // const todo = dataList.find((t) => t.id === id) as Todo;
-      // console.log(todo);
-      // const { dateType, startDate, dueDate, remindTime } = todo;
-      // const formData = {
-      //   ...todo,
-      // } as any;
-      // if (dateType === "range" && startDate && dueDate) {
-      //   formData.dateRange = [dayjs(startDate), dayjs(dueDate)];
-      // }
-      // if (remindTime) {
-      //   formData.remindTime = dayjs(remindTime, "HH:mm");
-      // }
-      // console.log(formData);
-      // form.setFieldsValue(formData);
+      reqTodoDetail(id).then((res) => {
+        const {
+          isOverdue,
+          dateType,
+          title,
+          description,
+          priority,
+          tags,
+          remindType,
+          repeatType,
+          advanceType,
+          advanceValue,
+          remindTime,
+          dueDate,
+        } = res;
+        const formData = {
+          title,
+          description,
+          priority,
+          tags,
+          remindType,
+          repeatType,
+          advanceType,
+          advanceValue,
+          dateType,
+          dueDate: dueDate ? dayjs(dueDate) : null, // 转换为 dayjs 对象,
+          remindTime: remindTime ? dayjs(`${dueDate} ${remindTime}`) : null,
+        };
+        // 判断是否逾期，如果逾期并且到期类型设置的today，则设置为指定日期
+        if (isOverdue && dateType === "today") {
+          formData.dateType = "specific";
+        }
+        form.setFieldsValue(formData as any);
+      });
     } else if (type === "add") {
       form.resetFields();
       form.setFieldsValue({
@@ -139,27 +162,21 @@ export default function TaskModal({
     });
   };
   // 提交方法
-  const { getTaskAllList, todos } = useTaskContext();
+  const { getTaskAllList } = useTaskStore();
   const submitTodo = async (params: any) => {
-    console.log(todos);
-    getTaskAllList();
-
-    // try {
-    //   if (type === "edit" && id) {
-    //     await reqUpdateTodo({ ...params, id });
-    //     getTaskAllList();
-    //     messageApi.success("更新成功！");
-    //   } else {
-    //     await reqAddTodo(params);
-    //     console.log("调用列表");
-
-    //     getTaskAllList();
-    //     messageApi.success("创建成功！");
-    //   }
-    //   close();
-    // } catch (error) {
-    //   messageApi.error("操作失败，请重试！");
-    // }
+    try {
+      if (type === "edit" && id) {
+        await reqUpdateTodo({ ...params, id });
+        messageApi.success("更新成功！");
+      } else {
+        await reqAddTodo(params);
+        messageApi.success("创建成功！");
+      }
+      getTaskAllList();
+      close();
+    } catch (error) {
+      messageApi.error("操作失败，请重试！");
+    }
   };
 
   // 校验提醒时间是否合理
@@ -296,7 +313,6 @@ export default function TaskModal({
 
   return (
     <div className="task-modal">
-      {contextHolder}
       <Modal
         title={type === "add" ? "新增任务" : "编辑任务"}
         open={open}
@@ -306,7 +322,6 @@ export default function TaskModal({
         cancelText="取消"
         forceRender={true}
         width={650}
-        getContainer={getContainer}
       >
         <Form
           form={form}
@@ -427,6 +442,7 @@ export default function TaskModal({
               <DatePicker
                 placeholder="选择任务日期"
                 style={{ width: "100%" }}
+                format="YYYY-MM-DD"
               />
             </Form.Item>
           )}

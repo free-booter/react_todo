@@ -1,8 +1,5 @@
-import {
-  TodoListItem,
-  TodoListReq,
-  TodoListRes,
-} from "@/services/api/home/type";
+import { TodoListReq, TodoListRes } from "@/services/api/home/type";
+import { Todo } from "@/types/task";
 export type TaskStatus = "todo" | "doing" | "done" | string;
 
 export interface TaskStore {
@@ -18,7 +15,7 @@ export interface TaskStore {
   ) => void;
   updateTaskList: (
     mapKey: keyof TaskStore["taskListMap"],
-    data: TodoListItem,
+    data: Todo,
     action: "add" | "edit" | "del"
   ) => void;
   getAllTaskList: (params?: TodoListReq) => void;

@@ -1,18 +1,14 @@
 import { Badge, Button } from "antd";
 import { AlertCircle, Calendar, Filter, Flag } from "lucide-react";
-import { Todo } from "../../type";
 import { reqTaskCounts } from "@/services/api/home";
 import { useEffect, useState } from "react";
 import { StatisticCounts } from "@/services/api/home/type";
+import { useTaskStore } from "@/store/task";
 
-export type FilterType = "all" | "today" | "overdue" | "high-priority";
-export interface TodoFiltersProps {
-  activeFilter: FilterType;
-  onFilterChange: (filter: FilterType) => void;
-  todos: Todo[];
-}
+export type FilterType = "all" | "today" | "isOverdue" | "high-priority";
 
-function TaskFilters({ activeFilter, onFilterChange }: TodoFiltersProps) {
+function TaskFilters() {
+  const { getTaskAllList } = useTaskStore();
   const [filterCounts, setFilterCounts] = useState<StatisticCounts>({
     totalCount: 0,
     todayCount: 0,
@@ -22,13 +18,23 @@ function TaskFilters({ activeFilter, onFilterChange }: TodoFiltersProps) {
 
   const getFilterCounts = async () => {
     const res = await reqTaskCounts();
-    console.log(res);
-
     setFilterCounts(res);
   };
   useEffect(() => {
     getFilterCounts();
   }, []);
+
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const changeFilter = (filter: FilterType) => {
+    setActiveFilter(filter);
+    if (filter === "all") {
+      getTaskAllList();
+    } else if (filter === "high-priority") {
+      getTaskAllList({ priority: "high" });
+    } else {
+      getTaskAllList({ [filter]: true });
+    }
+  };
 
   const filters = [
     {
@@ -46,7 +52,7 @@ function TaskFilters({ activeFilter, onFilterChange }: TodoFiltersProps) {
       variant: "secondary" as const,
     },
     {
-      key: "overdue" as const,
+      key: "isOverdue" as const,
       label: "已逾期",
       icon: AlertCircle,
       count: filterCounts.overdueCount,
@@ -68,7 +74,7 @@ function TaskFilters({ activeFilter, onFilterChange }: TodoFiltersProps) {
           return (
             <Button
               key={filter.key}
-              onClick={() => onFilterChange(filter.key)}
+              onClick={() => changeFilter(filter.key)}
               className="gap-2 h-auto py-3 px-4"
               type={activeFilter === filter.key ? "primary" : "default"}
             >
@@ -80,7 +86,7 @@ function TaskFilters({ activeFilter, onFilterChange }: TodoFiltersProps) {
                     className={`
                     rounded-xl
                     ${
-                      filter.key === "overdue"
+                      filter.key === "isOverdue"
                         ? "bg-red-600 text-white"
                         : "bg-gray-200"
                     }

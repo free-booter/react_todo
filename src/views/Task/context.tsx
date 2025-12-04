@@ -1,31 +1,29 @@
 import { createContext, useContext } from "react";
-import { TaskStatus, Todo } from "./type";
-import { TodoListRes } from "@/services/api/home/type";
+import { Todo } from "./type";
+import { TaskStatus } from "@/types/task";
 
 type TaskContextType = {
-  todos: Todo[];
-  updateTodoStatus: (id: number, status: Todo["status"]) => void;
-  onReorder: (todoId: number, dropId: number) => void;
-  openModal: (type: "view" | "edit" | "add", todo?: Todo) => void;
-  todoListMap: Record<TaskStatus, TodoListRes>;
-  // 获取任务列表
-  getTaskAllList: () => void;
+  openModal: (
+    type: "view" | "edit" | "add",
+    todo?: Todo | { status: TaskStatus }
+  ) => void;
+  /**
+   * 重排
+   * @param todoId 被拖拽todoId
+   * @param dropId 目标id（需要移动在目标id上方），如果目标列表为空则为 null
+   * @param targetStatus 目标状态（当目标列表为空时使用）
+   * @returns
+   */
+  onReorder: (
+    todoId: number,
+    dropId: number | null,
+    targetStatus?: TaskStatus
+  ) => void;
 };
 
-// 默认值只是兜底
 const TaskContext = createContext<TaskContextType>({
-  todos: [],
-  updateTodoStatus: () => {},
-  onReorder: () => {},
   openModal: () => {},
-  todoListMap: {
-    todo: {} as TodoListRes,
-    inprogress: {} as TodoListRes,
-    done: {} as TodoListRes,
-  },
-  getTaskAllList: () => {
-    console.log("-----调用列表-----");
-  },
+  onReorder: () => {},
 });
 
 // 方便子组件直接 use
