@@ -1,6 +1,125 @@
+@import "@/styles/variables.less";
+
 .task-page {
   height: 100%;
+
   .task-header {
     background-color: #fff;
+  }
+
+  // 视图切换动画容器
+  .view-container {
+    position: relative;
+    min-height: 400px;
+
+    // 方案1：简单淡入淡出（最舒适，推荐）
+    &.view-enter {
+      animation: simpleFadeIn 0.3s ease-out forwards;
+    }
+
+    &.view-exit {
+      animation: simpleFadeOut 0.25s ease-in forwards;
+    }
+  }
+
+  // === 方案1：简单淡入淡出 ===
+  @keyframes simpleFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes simpleFadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* 
+  // === 方案2：轻微缩放（如果想要一点动感但不晕） ===
+  @keyframes gentleZoomIn {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes gentleZoomOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+  }
+  */
+
+  /* 
+  // === 方案3：左右滑动（类似轮播，不会晕） ===
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideOutLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+  }
+  */
+
+  /* 
+  // === 方案4：垂直滑动（更柔和） ===
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideOutUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+  }
+  */
+
+  // 性能优化
+  .board-view,
+  .custom-list-view {
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 }

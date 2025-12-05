@@ -1,0 +1,342 @@
+@import "@/styles/variables.less";
+
+.custom-list-view {
+  width: 100%;
+
+  // 列表主体 - 去掉表头，采用卡片式设计
+  .list-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .task-list-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      background: @bg-primary;
+      border-radius: 12px;
+      border: 1px solid @border-color;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: visible;
+
+      &:hover {
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+        border-color: fade(@theme-primary, 20%);
+      }
+
+      // 拖拽手柄区域
+      .drag-handle-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        flex-shrink: 0;
+
+        .drag-handle {
+          padding: 8px;
+          cursor: grab;
+          color: @text-tertiary;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+
+          &:hover {
+            color: @theme-primary;
+            background: fade(@theme-primary, 5%);
+            transform: scale(1.15);
+          }
+
+          &:active {
+            cursor: grabbing;
+            background: fade(@theme-primary, 10%);
+            transform: scale(1.05);
+          }
+        }
+      }
+
+      // 主内容区域
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+        cursor: pointer;
+
+        // 第一行：标题 + 标签
+        .row-top {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .task-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: @text-primary;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            &.line-through {
+              text-decoration: line-through;
+              color: @text-tertiary;
+            }
+          }
+
+          .tags-wrapper {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+          }
+        }
+
+        // 第二行：描述（如果有）
+        .task-desc {
+          font-size: 13px;
+          color: @text-secondary;
+          line-height: 1.5;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+
+        // 第三行：元信息
+        .row-meta {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
+
+          .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: @text-secondary;
+
+            svg,
+            .anticon {
+              font-size: 14px;
+            }
+
+            &.date-info {
+              &.overdue {
+                color: @danger;
+                font-weight: 500;
+              }
+            }
+
+            &.status-badge {
+              padding: 4px 12px;
+              border-radius: 20px;
+              cursor: pointer;
+              transition: all 0.2s ease;
+              font-weight: 500;
+              background: fade(@info, 8%);
+              color: @info;
+
+              &:hover {
+                background: fade(@info, 15%);
+                transform: translateY(-1px);
+              }
+            }
+          }
+        }
+      }
+
+      // 右侧信息区域
+      .side-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-shrink: 0;
+
+        .priority-wrapper {
+          display: flex;
+          align-items: center;
+        }
+
+        .actions-wrapper {
+          display: flex;
+          align-items: center;
+
+          .ant-btn {
+            border: none;
+            &:hover {
+              background: @hover-light;
+            }
+          }
+        }
+      }
+
+      // 拖拽中的行
+      &.dragging {
+        opacity: 0.7;
+        background: @bg-secondary !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12),
+          0 0 0 1px fade(@theme-primary, 30%) !important;
+        transform: scale(0.98) rotate(1deg) !important;
+        z-index: 1000;
+        cursor: grabbing;
+
+        .drag-handle-wrapper .drag-handle {
+          color: @theme-primary;
+        }
+      }
+
+      // 拖拽目标行
+      &.drag-over {
+        background: fade(@theme-primary, 3%) !important;
+        border-color: fade(@theme-primary, 30%);
+      }
+
+      // 插入位置指示器 - 上方
+      &.drop-before::before {
+        content: "";
+        position: absolute;
+        left: -4px;
+        top: -8px;
+        right: -4px;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          @theme-primary 0%,
+          fade(@theme-primary, 80%) 50%,
+          @theme-primary 100%
+        );
+        border-radius: 4px;
+        z-index: 10;
+        box-shadow: 0 0 12px fade(@theme-primary, 60%),
+          0 0 24px fade(@theme-primary, 40%);
+        animation: pulse-insert 1.2s ease-in-out infinite;
+      }
+
+      // 插入位置指示器 - 下方
+      &.drop-after::after {
+        content: "";
+        position: absolute;
+        left: -4px;
+        bottom: -8px;
+        right: -4px;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          @theme-primary 0%,
+          fade(@theme-primary, 80%) 50%,
+          @theme-primary 100%
+        );
+        border-radius: 4px;
+        z-index: 10;
+        box-shadow: 0 0 12px fade(@theme-primary, 60%),
+          0 0 24px fade(@theme-primary, 40%);
+        animation: pulse-insert 1.2s ease-in-out infinite;
+      }
+
+      // 逾期任务 - 左侧红色边框
+      &.overdue {
+        border-left: 4px solid @danger;
+        background: linear-gradient(
+          to right,
+          fade(@danger, 3%) 0%,
+          @bg-primary 100%
+        );
+
+        &:hover {
+          background: linear-gradient(
+            to right,
+            fade(@danger, 6%) 0%,
+            @bg-primary 100%
+          );
+        }
+      }
+
+      // 已完成任务 - 左侧绿色边框
+      &.done {
+        border-left: 4px solid @success;
+        background: linear-gradient(
+          to right,
+          fade(@success, 3%) 0%,
+          @bg-primary 100%
+        );
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+          background: linear-gradient(
+            to right,
+            fade(@success, 6%) 0%,
+            @bg-primary 100%
+          );
+        }
+
+        .main-content {
+          .task-title {
+            color: @text-secondary;
+          }
+        }
+      }
+    }
+  }
+
+  // 分页
+  .list-footer {
+    display: flex;
+    justify-content: center;
+    padding: 32px 0;
+    margin-top: 8px;
+  }
+
+  // 动画
+  @keyframes pulse-insert {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scaleX(1) scaleY(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scaleX(0.98) scaleY(1.4);
+    }
+  }
+
+  @keyframes glow {
+    0%,
+    100% {
+      box-shadow: 0 0 12px fade(@theme-primary, 40%),
+        0 0 24px fade(@theme-primary, 20%);
+    }
+    50% {
+      box-shadow: 0 0 20px fade(@theme-primary, 60%),
+        0 0 40px fade(@theme-primary, 30%);
+    }
+  }
+
+  // 空状态
+  .ant-empty {
+    padding: 80px 0;
+  }
+
+  // 响应式
+  @media (max-width: 768px) {
+    .list-body .task-list-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      .side-info {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  }
+}

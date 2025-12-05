@@ -1,0 +1,42 @@
+---
+description: Ant Design, UnoCSS 和 Less 的使用规范
+globs:
+---
+
+"\*_/_.tsx"
+
+"\*_/_.less"
+
+UI 组件与样式规范
+
+1. Ant Design (AntD) 使用规范
+
+优先使用 AntD 组件: 任何标准 UI 元素（按钮、表单、表格、日历、弹窗等）都应优先使用 Ant Design 的组件，以保持设计统一性。
+
+国际化: 所有组件的文本（例如 Table 的空状态、Pagination 的提示）都应考虑国际化（如果项目有设置）。
+
+2. 样式方案 (UnoCSS & Less)
+
+UnoCSS 优先: 对于组件内部的布局、边距、字体、Flex/Grid 等即时样式，必须使用 UnoCSS 类名添加到组件的 className 属性中。
+
+例如：className="flex justify-center items-center p-4 bg-white/90"。
+
+主题变量: 涉及到颜色、间距等主题变量时，优先使用 styles 文件下的 Less 变量。
+
+Less 文件用途: 仅在需要处理以下复杂场景时才创建单独的 .less 文件：
+
+覆盖 Ant Design 复杂的内部样式（使用 :global 或嵌套选择器）。
+
+编写复杂的 CSS 动画或关键帧。
+
+定义 Less 变量。
+
+Less 命名: Less 文件中的类名必须使用 BEM 规范或基于组件名称的命名。
+
+例如：task-board\_\_column。
+
+3. 图标 (Lucide-react)
+
+所有图标都必须使用 lucide-react 库。
+
+图标的尺寸和颜色应通过组件的 size 和 color 属性或 UnoCSS 类名来控制，而不是直接在 SVG 中硬编码。

@@ -1,27 +1,19 @@
 import { reqTodoDetail } from "@/services/api/home";
-import { Button, Flex, Modal, Tag, Timeline } from "antd";
+import { Flex, Modal, Tag, Timeline } from "antd";
 import { useEffect, useState } from "react";
-import StatusIcon from "../statusIcon";
 import {
-  Award,
   Bell,
   Calendar,
-  CalendarPlus,
   CalendarSync,
-  CircleCheck,
   CircleCheckBig,
   ClockAlert,
-  Flag,
-  Repeat,
   Sparkles,
   Tags,
   Zap,
 } from "lucide-react";
-import { ClockCircleOutlined } from "@ant-design/icons";
-import { TodoDetail } from "@/services/api/home/type";
 import dayjs, { ManipulateType } from "dayjs";
 import { formatDate } from "@/utils/formatDateDesc";
-import { RemindTypeConfig, RepeatTypeConfig } from "@/types/config";
+import { RepeatTypeConfig } from "@/types/config";
 import PriorityTag from "../priorityTag";
 import { Todo, RemindType } from "@/types/task";
 
@@ -52,7 +44,8 @@ function TaskDetail({
     if (open && id) {
       getTaskDetail(id);
     }
-  }, [open]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, id]);
 
   const renderTimeLine = () => {
     const { status } = detail;
@@ -150,34 +143,40 @@ function TaskDetail({
   };
 
   const renderRemindDesc = () => {
-    const { createdAt, remindTime, remindType, remindOffset = 0 } = detail;
+    const { dueDate, remindTime, remindType, advanceType, advanceValue } =
+      detail;
     if (detail.remindType === "none") return "无";
-    else if (detail.remindType && detail.remindType !== "custom") {
+
+    if (!remindTime || !dueDate) return "无";
+
+    // 基准时间
+    let baseTime = dayjs(`${dueDate} ${remindTime}`);
+
+    if (detail.remindType && detail.remindType !== "custom") {
       // 非自定义
       const RemindValueMap: Record<RemindType, number | null> = {
-        none: null, // 对应“无”
-        on_time: 0, // 当天
-        one_day_before: 1, // 提前 1 天
-        two_days_before: 2, // 提前 2 天
-        one_week_before: 7, // 提前 7 天
+        none: null,
+        on_time: 0,
+        one_day_before: 1,
+        two_days_before: 2,
+        one_week_before: 7,
         custom: null,
       };
-      let day = RemindValueMap[remindType] as number;
-      // 获取减去提前天数的值
-      const targetDate = dayjs(createdAt)
-        .subtract(day, "day")
-        .format("YYYY-MM-DD");
-      return `${formatDate(targetDate)} ${detail.remindTime}`;
-    } else if (detail.remindOffset && detail.remindType === "custom") {
+      const day = RemindValueMap[remindType] as number;
+      const targetDate = baseTime.subtract(day, "day");
+      return formatDate(targetDate.format("YYYY-MM-DD HH:mm"));
+    } else if (
+      detail.remindType === "custom" &&
+      advanceType !== undefined &&
+      advanceValue
+    ) {
       // 自定义提醒
-
-      const datePart = dayjs(createdAt).format("YYYY-MM-DD");
-      let remindAt = dayjs(`${datePart} ${remindTime}`);
-      const targetDate = dayjs(remindAt)
-        .subtract(Math.abs(remindOffset), "minute" as ManipulateType)
-        .format("YYYY-MM-DD HH:mm");
-      return formatDate(targetDate);
+      const units: ManipulateType[] = ["minute", "hour", "day", "week"];
+      const targetDate = baseTime.subtract(advanceValue, units[advanceType]);
+      return formatDate(targetDate.format("YYYY-MM-DD HH:mm"));
     }
+
+    return formatDate(baseTime.format("YYYY-MM-DD HH:mm"));
   };
   return (
     <Modal
@@ -235,14 +234,16 @@ function TaskDetail({
               </span>
             </div>
           </div>
-          {detail.isOverdue && (
+          {detail.isOverdue && detail.dueDate && (
             <div className="flex items-center gap-2 mt-3">
               <div className="bg-red-100 px-2.2 py-1 pt-2 rounded-lg">
                 <ClockAlert size={16} className="color-red-500" />
               </div>
               <div className="flex  flex-col">
                 <span className="text-xs text-red-500">已逾期</span>
-                <span className="text-13px">24天</span>
+                <span className="text-13px">
+                  逾期{dayjs().diff(dayjs(detail.dueDate), "day")}天
+                </span>
               </div>
             </div>
           )}

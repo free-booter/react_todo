@@ -35,6 +35,7 @@ function BoardView() {
       todos: doneList,
     },
   ];
+
   return (
     <div className="board-view">
       <Spin spinning={loading}>

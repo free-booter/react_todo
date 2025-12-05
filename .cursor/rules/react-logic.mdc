@@ -1,0 +1,32 @@
+---
+description: React Hooks, Zustand, Typescript, 和数据请求的最佳实践
+globs:
+---
+
+React 逻辑与状态管理规范
+
+1. 组件与 Hooks
+
+Props 类型: 必须为组件的 Props 定义明确的 TypeScript interface 或 type。
+
+性能优化: 对于需要传递给子组件的回调函数，如果该回调不经常变化，请使用 useCallback 进行包裹。
+
+副作用管理: 所有的副作用（例如数据获取、定时器设置）必须在 useEffect 中处理，并确保正确处理依赖项和清理函数。
+
+2. 状态管理 (Zustand)
+
+Store 文件: 所有的全局状态必须在 src/store/ 目录下定义为独立的 Store。
+
+Store 结构: Store 必须使用 TS 接口定义状态 (State) 和行为 (Actions)，然后合并为一个类型。
+
+更新机制: 推荐使用函数式更新 (set(state => ({ count: state.count + 1 }))) 来确保状态更新的原子性。
+
+命名: Store 钩子命名为 use[StoreName]Store。
+
+3. 数据请求 (Axios)
+
+统一封装: 所有 API 请求都必须通过 src/api 目录下的封装函数进行调用，不允许在组件内直接使用 Axios 实例。
+
+类型定义: 必须定义请求体 (Request) 和响应体 (Response) 的 TypeScript 类型。
+
+错误处理: 在 API 封装层，统一处理网络错误、4xx/5xx 状态码，并抛出可在组件层捕获的错误。

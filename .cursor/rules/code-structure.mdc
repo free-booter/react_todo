@@ -1,0 +1,38 @@
+---
+description: 文件结构、命名约定和注释语言规范
+globs:
+---
+
+"\*_/_"
+
+代码结构与命名规范
+
+1. 文件与文件夹结构 (按类型划分)
+
+顶层目录: 遵循类型划分，例如：src/components, src/views, src/store, src/services, src/hooks。
+
+组件结构: 尽量将复杂的组件放在一个同名文件夹内，例如 src/components/TaskCard/index.tsx。
+
+功能命名: 尽量使用明确的英文单词命名目录，避免缩写。
+
+2. 命名约定 (Camel Case Convention)
+
+文件夹命名: 必须使用大驼峰命名法 (PascalCase)。
+
+例如：TaskBoard, PersonalCenter。
+
+组件命名: 必须使用大驼峰命名法 (PascalCase)。
+
+例如：TaskBoardColumn, DashboardLayout。
+
+函数/变量/实例命名: 必须使用小驼峰命名法 (camelCase)。
+
+例如：handleSave, fetchTasks, userProfile。
+
+TypeScript 类型/接口命名: 必须使用大驼峰命名法 (PascalCase)，并且接口名前缀可以使用 I（例如 ITask）或直接使用名词（例如 Task），但需保持统一。
+
+3. 注释规范
+
+语言: 所有注释和 JSDoc 必须使用中文编写，清晰准确地解释代码意图、参数和返回值。
+
+头部注释: 复杂文件或公共函数必须有中文注释说明其用途。

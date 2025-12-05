@@ -10,7 +10,6 @@ import {
   Input,
   InputNumber,
   InputRef,
-  message,
   Modal,
   Radio,
   Select,
@@ -107,9 +106,12 @@ export default function TaskModal({
         repeatType: "none",
       });
     }
-  }, [open]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, type, id]);
 
   const hideModal = () => {
+    // 清理状态
+    setLabel("");
     close();
   };
   const handleConfirm = () => {
@@ -173,6 +175,8 @@ export default function TaskModal({
         messageApi.success("创建成功！");
       }
       getTaskAllList();
+      // 清理状态
+      setLabel("");
       close();
     } catch (error) {
       messageApi.error("操作失败，请重试！");

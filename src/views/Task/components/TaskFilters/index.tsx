@@ -1,14 +1,14 @@
 import { Badge, Button } from "antd";
 import { AlertCircle, Calendar, Filter, Flag } from "lucide-react";
 import { reqTaskCounts } from "@/services/api/home";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StatisticCounts } from "@/services/api/home/type";
 import { useTaskStore } from "@/store/task";
 
 export type FilterType = "all" | "today" | "isOverdue" | "high-priority";
 
 function TaskFilters() {
-  const { getTaskAllList } = useTaskStore();
+  const { getTaskAllList, todoListMap } = useTaskStore();
   const [filterCounts, setFilterCounts] = useState<StatisticCounts>({
     totalCount: 0,
     todayCount: 0,
@@ -20,9 +20,20 @@ function TaskFilters() {
     const res = await reqTaskCounts();
     setFilterCounts(res);
   };
+
+  // 计算任务总数，只在总数变化时重新获取统计
+  const totalTaskCount = useMemo(() => {
+    return (
+      (todoListMap.todo.list?.length || 0) +
+      (todoListMap.inprogress.list?.length || 0) +
+      (todoListMap.done.list?.length || 0)
+    );
+  }, [todoListMap]);
+
   useEffect(() => {
     getFilterCounts();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalTaskCount]);
 
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const changeFilter = (filter: FilterType) => {
@@ -67,7 +78,7 @@ function TaskFilters() {
     },
   ];
   return (
-    <div className="task-filter mb-8">
+    <div className="task-filter">
       <div className="flex flex-wrap gap-3">
         {filters.map((filter) => {
           const Icon = filter.icon;

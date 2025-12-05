@@ -1,6 +1,6 @@
 import PriorityTag from "@/components/priorityTag";
 import { Todo } from "../../type";
-import { Dropdown, MenuProps, message, Modal, Tag, Tooltip } from "antd";
+import { Dropdown, MenuProps, Modal, Tag, Tooltip } from "antd";
 import {
   ClockCircleOutlined,
   DeleteOutlined,
@@ -16,7 +16,7 @@ import { Calendar } from "lucide-react";
 import { useContext, useState } from "react";
 import { getOverdueDays } from "@/utils/formatDateDesc";
 import { useTaskStore } from "@/store/task";
-import { reqDeleteTodo, reqUpdateTodoStatus } from "@/services/api/home";
+import { reqUpdateTodoStatus } from "@/services/api/home";
 import { MessageContext } from "@/context/MessageContext";
 
 interface TodoCardProps {
@@ -59,10 +59,8 @@ function TaskCard({ todo }: TodoCardProps) {
           content: "确定要删除吗？",
         });
         if (!confirm) return;
-        // await reqDeleteTodo({ id: todo.id });
-        deleteTodo(todo.id, todo.status);
+        await deleteTodo(todo.id, todo.status);
         messageApi.success("删除成功");
-        console.log("---");
       },
     },
   ];
@@ -111,7 +109,7 @@ function TaskCard({ todo }: TodoCardProps) {
               todo.status === "done" ? "line-through" : ""
             } text-base font-medium text-ellipsis overflow-hidden whitespace-nowrap`}
           >
-            {todo.title}-{todo.order}
+            {todo.title}
           </div>
           {/* 更多 */}
           <div className="ml-auto flex items-center shrink-0">

@@ -1,0 +1,30 @@
+---
+description: 项目基础技术栈配置和AI行为准则
+alwaysApply: false
+---
+
+"\*_/_.tsx"
+
+"\*_/_.ts"
+
+基础技术栈与 AI 行为规范
+
+1. 核心技术栈 (Mandatory)
+
+前端框架: React 19 (函数式组件, 使用最新的 Hooks 特性)。
+
+编程语言: TypeScript (必须严格使用类型定义，杜绝使用 any，除非迫不得已且必须使用 @ts-ignore 并在旁边添加中文解释)。
+
+包管理器: pnpm。在提供安装指令时，必须使用 pnpm add 或 pnpm install。
+
+后端服务: Nest.js + MySQL。在编写 API 接口定义时，需考虑到 Nest.js 的 RESTful 风格。
+
+2. AI 行为准则
+
+语言: 所有代码注释、文档和对用户的回复都必须使用中文。
+
+代码风格: 严格遵循项目内的驼峰命名法和文件结构约定（将在其他 MDC 文件中详细说明）。
+
+前置沟通: 在进行任何重要修改或新建文件前，必须简要地用中文说明你的修改思路和涉及的文件名。
+
+错误处理: 客户端代码中，必须为所有异步请求（Axios）编写 try...catch 结构，并使用 Ant Design 的 message 或 notification 组件提示用户。
