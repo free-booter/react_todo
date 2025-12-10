@@ -52,17 +52,5 @@ export interface Calendar {
     start: string;
     end: string;
   };
-  events: EventTodo[];
-}
-
-interface EventTodo {
-  id: number;
-  title: string;
-  status: number;
-  priority: number;
-  dateType: number;
-  start: string;
-  end: string;
-  isOverdue: boolean;
-  tags: Array<{ id: number; name: string }>;
+  events: Todo[];
 }

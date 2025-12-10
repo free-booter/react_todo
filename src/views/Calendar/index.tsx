@@ -1,109 +1,130 @@
-// import { Calendar as AntCalendar, CalendarProps } from "antd";
-// import "./index.less";
-// import dayjs, { Dayjs } from "dayjs";
-// import { taskList } from "./config";
-// import type { Calendar, TodoDetail } from "@/services/api/home/type";
-// import { TaskDateType, TaskPriority } from "@/types/task";
-// import { useEffect, useState } from "react";
-// import { reqTaskCalender } from "@/services/api/home";
+import { useState, useEffect } from "react";
+import { reqTaskCalender } from "@/services/api/home";
+import { CalendarProps, Calendar } from "antd";
+import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { Calendar as CalendarType } from "@/services/api/home/type";
+dayjs.locale("zh-cn");
+import "./index.less";
+import { getPriorityBadgeColor } from "@/utils";
+import { PlusCircleOutlined } from "@ant-design/icons";
 
-// export default function Calendar() {
-//   const [calendarData, setCalendarData] = useState<Calendar>({} as Calendar);
-//   const [month, setMonth] = useState(dayjs());
-//   useEffect(() => {
-//     reqTaskCalender({ month: month.format("YYYY-MM") }).then((res) => {
-//       setCalendarData(res);
-//     });
-//   }, [month]);
-//   const getListData = (value: Dayjs) => {
-//     const list = calendarData?.events || [];
-//     return list.filter((task) => isDateInRange(value, task.start, task.end));
-//   };
-//   const isDateInRange = (
-//     date: Dayjs,
-//     startDate: string,
-//     endDate: string
-//   ): boolean => {
-//     return (
-//       !date.isBefore(dayjs(startDate), "day") &&
-//       !date.isAfter(dayjs(endDate), "day")
-//     );
-//   };
-//   const getMonthData = (value: Dayjs) => {
-//     if (value.month() === 8) {
-//       return 1394;
-//     }
-//   };
-//   const monthCellRender = (value: Dayjs) => {
-//     const num = getMonthData(value);
-//     return num ? (
-//       <div className="notes-month">
-//         <section>{num}</section>
-//         <span>Backlog number</span>
-//       </div>
-//     ) : null;
-//   };
+function CalendarView() {
+  // 获取当前显示的日期范围
+  const [visibleRange, setVisibleRange] = useState<{
+    start: string;
+    end: string;
+  }>({ start: "", end: "" });
+  const [calendarData, setCalendarData] = useState<CalendarType>({
+    range: {
+      start: "",
+      end: "",
+    },
+    events: [],
+  });
+  const handleVisibleRange = (month: Dayjs) => {
+    // 总共有42个格子
+    const start = month.startOf("month").startOf("week");
+    let end = month.endOf("month").endOf("week");
+    // 判断加起来是不是有42个格子
+    const totalDays = end.diff(start, "day") + 1;
+    if (totalDays < 42) {
+      // 在加一周
+      end = end.add(1, "week");
+    }
+    setVisibleRange({
+      start: start.format("YYYY-MM-DD"),
+      end: end.format("YYYY-MM-DD"),
+    });
+  };
+  useEffect(() => {
+    // 默认获取当月的
+    handleVisibleRange(dayjs());
+  }, []);
+  useEffect(() => {
+    if (visibleRange.start && visibleRange.end) {
+      getTaskCalender();
+    }
+  }, [visibleRange.start, visibleRange.end]);
+  const getTaskCalender = async () => {
+    const { start, end } = visibleRange;
+    const res = await reqTaskCalender({
+      startDate: start,
+      endDate: end,
+    });
+    setCalendarData(res);
+  };
+  const getListData = (value: Dayjs) => {
+    const { events = [] } = calendarData;
+    const listData = events.filter((task) => {
+      if (task.dateType === "range") {
+        return value.isAfter(task.startDate) && value.isBefore(task.dueDate);
+      } else if (task.dueDate) {
+        return value.isSame(task.dueDate, "day");
+      }
+    });
+    return listData || [];
+  };
 
-//   const getFlagClass = (priority: number) => {
-//     switch (priority) {
-//       case TaskPriority.NONE:
-//         return "flag-none";
-//       case TaskPriority.LOW:
-//         return "flag-low";
-//       case TaskPriority.MEDIUM:
-//         return "flag-medium";
-//       case TaskPriority.HIGH:
-//         return "flag-high";
-//       default:
-//     }
-//   };
-//   const dateCellRender = (value: Dayjs) => {
-//     const listData = getListData(value);
-//     if (!listData || listData.length === 0) return null;
-//     return (
-//       <ul className="calendar-list">
-//         {listData.map((item) => (
-//           <li key={item.id} className={getFlagClass(item.priority)}>
-//             {item.title}
-//           </li>
-//         ))}
-//       </ul>
-//     );
-//   };
-//   const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
-//     if (info.type === "date") return dateCellRender(current);
-//     if (info.type === "month") return monthCellRender(current);
-//     return info.originNode;
-//   };
-//   return (
-//     <div className="calendar-page">
-//       <AntCalendar cellRender={cellRender} />
-//       {/* 右边面板 */}
-//       {/* <div className="calendar-right">
-//         <div className="calendar-card">
-//           <div className="card-header">今日日程</div>
-//           <div className="card-content">
-//             <div className="card-content__item">
-//               <div className="item-title">产品需求评审</div>
-//               <div className="item-time">09:00 - 09:30</div>
-//             </div>
-//             <div className="card-content__item">
-//               <div className="item-title">产品需求评审</div>
-//               <div className="item-time">09:00 - 09:30</div>
-//             </div>
-//             <div className="card-content__item">
-//               <div className="item-title">产品需求评审</div>
-//               <div className="item-time">09:00 - 09:30</div>
-//             </div>
-//           </div>
-//         </div>
-//       </div> */}
-//     </div>
-//   );
-// }
+  const getMonthData = (value: Dayjs) => {
+    if (value.month() === 8) {
+      return 1394;
+    }
+  };
+  const monthCellRender = (value: Dayjs) => {
+    const num = getMonthData(value);
+    return num ? (
+      <div className="notes-month">
+        <section>{num}</section>
+        <span>Backlog number</span>
+      </div>
+    ) : null;
+  };
 
-function Calendar() {
-  return <div>Calendar</div>;
+  const dateCellRender = (value: Dayjs) => {
+    const listData = getListData(value);
+    return (
+      <>
+        <PlusCircleOutlined className="add-task-icon" />
+        <div className="task-list">
+          {listData.map((task) => (
+            <div
+              className={`task-cell border-l-4px border-l-solid shadow transition-all cursor-pointer rounded-xl ${getPriorityBadgeColor(
+                task.priority
+              )}`}
+              key={task.id}
+            >
+              {task.title}
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  };
+  const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
+    if (info.type === "date") {
+      return dateCellRender(current);
+    }
+    if (info.type === "month") {
+      return monthCellRender(current);
+    }
+    return info.originNode;
+  };
+  const onPanelChange: CalendarProps<Dayjs>["onPanelChange"] = (
+    value,
+    mode
+  ) => {
+    // 当月份切换时，更新当前月份
+    if (mode === "month") {
+      handleVisibleRange(value);
+    }
+  };
+
+  return (
+    <div>
+      <Calendar onPanelChange={onPanelChange} cellRender={cellRender} />
+    </div>
+  );
 }
 
-export default Calendar;
+export default CalendarView;

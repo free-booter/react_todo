@@ -1,103 +1,17 @@
-// 已完成的背景颜色
-@bg-done: #f0f0f0;
-
-.calendar-page {
-  display: flex;
-  .calendar-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    li {
-      padding: 5px 10px;
-      border-radius: 5px;
-      background-color: @bg-done;
-      color: @text-disabled;
-      margin-bottom: 5px;
-      box-sizing: border-box;
-      &.flag-none {
-        .generate-background-color(@flag-none, 0.1, "light");
-        color: @flag-none;
-      }
-      &.flag-low {
-        .generate-background-color(@flag-low, 0.1, "light");
-        color: @flag-low;
-      }
-      &.flag-medium {
-        .generate-background-color(@flag-medium, 0.1, "light");
-        color: @flag-medium;
-      }
-      &.flag-high {
-        .generate-background-color(@flag-high, 0.1, "light");
-        color: @flag-high;
-      }
-    }
+.task-list {
+  .task-cell {
+    position: relative;
+    width: 100%;
+    font-size: @font-size-xs;
+    padding: 3px 5px;
+    border-radius: @border-radius-base;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
-  .calendar-right {
-    flex-shrink: 0;
-    margin-left: 50px;
-    width: 300px;
-
-    .calendar-card {
-      border-radius: @border-radius-base;
-      background-color: @bg-white;
-      .status-card-mixin();
-      .card-header {
-        font-size: @font-size-base;
-        font-weight: @font-weight-medium;
-        margin-bottom: @card-padding;
-      }
-      .card-content {
-        padding: @card-padding;
-        background-color: @bg-done;
-        border-radius: @border-radius-base;
-        &__item {
-          position: relative;
-          padding-left: @spacing-base;
-          margin-bottom: @spacing-base;
-          .item-title {
-            font-size: @font-size-base;
-            font-weight: @font-weight-medium;
-            color: @text-primary;
-            margin-bottom: @spacing-xs;
-          }
-          .item-time {
-            font-size: @font-size-sm;
-            color: @text-secondary;
-          }
-          &::before {
-            content: "";
-            display: block;
-            width: 3px;
-            height: 100%;
-            // background-color: red;
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            border-radius: @border-radius-lg;
-          }
-          &.flag-none {
-            &::before {
-              background-color: @flag-none;
-            }
-          }
-          &.flag-low {
-            &::before {
-              background-color: @flag-low;
-            }
-          }
-          &.flag-medium {
-            &::before {
-              background-color: @flag-medium;
-            }
-          }
-          &.flag-high {
-            &::before {
-              background-color: @flag-high;
-            }
-          }
-        }
-      }
-    }
-  }
+}
+.add-task-icon {
+  position: relative;
 }

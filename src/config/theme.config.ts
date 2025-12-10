@@ -134,11 +134,6 @@ const themeConfig: ThemeConfig = {
       borderRadius: 8, // @border-radius-sm
       colorPrimary: "#6200ea", // @theme-primary
     },
-
-    // ========== Timeline 时间轴 ==========
-    Timeline: {
-      dotBg: "#6200ea", // @theme-primary
-    },
   },
 };
 
