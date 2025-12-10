@@ -242,7 +242,7 @@
         animation: pulse-insert 1.2s ease-in-out infinite;
       }
 
-      // 逾期任务 - 左侧红色边框
+      // 逾期任务 - 左侧红色边框（优先级最高）
       &.overdue {
         border-left: 4px solid @danger;
         background: linear-gradient(
@@ -257,6 +257,36 @@
             fade(@danger, 6%) 0%,
             @bg-primary 100%
           );
+        }
+      }
+
+      // 高优先级任务 - 红色边框和背景（与看板视图同步）
+      &.priority-high:not(.overdue) {
+        border-left: 4px solid #fca5a5; // red-300
+        background: #fef2f2; // red-50
+
+        &:hover {
+          border-left-color: #ef4444; // red-500
+        }
+      }
+
+      // 中优先级任务 - 橙色边框和背景（与看板视图同步）
+      &.priority-medium:not(.overdue) {
+        border-left: 4px solid #fdba74; // orange-300
+        background: #fff7ed; // orange-50
+
+        &:hover {
+          border-left-color: #f97316; // orange-500
+        }
+      }
+
+      // 低优先级任务 - 青色边框和背景（与看板视图同步）
+      &.priority-low:not(.overdue) {
+        border-left: 4px solid #67e8f9; // cyan-300
+        background: #ecfeff; // cyan-50
+
+        &:hover {
+          border-left-color: #06b6d4; // cyan-500
         }
       }
 

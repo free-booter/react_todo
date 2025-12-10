@@ -144,7 +144,16 @@ function ListView() {
       if (dropPosition === "before") classes.push("drop-before");
       if (dropPosition === "after") classes.push("drop-after");
     }
-    if (record.isOverdue) classes.push("overdue");
+    // 逾期优先级最高，如果逾期就不显示优先级样式
+    if (record.isOverdue) {
+      classes.push("overdue");
+    } else if (record.priority === "high") {
+      classes.push("priority-high");
+    } else if (record.priority === "medium") {
+      classes.push("priority-medium");
+    } else if (record.priority === "low") {
+      classes.push("priority-low");
+    }
     if (record.status === "done") classes.push("done");
     return classes.join(" ");
   };

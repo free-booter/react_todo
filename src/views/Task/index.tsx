@@ -18,7 +18,7 @@ function TaskPage() {
     useTaskStore();
 
   // 视图切换
-  const [viewType, setViewType] = useState<ViewType>("board");
+  const [viewType, setViewType] = useState<ViewType>("Kanban");
   const [isAnimating, setIsAnimating] = useState(false);
   const [animationState, setAnimationState] = useState<
     "idle" | "exit" | "enter"
@@ -30,10 +30,9 @@ function TaskPage() {
 
     setIsAnimating(true);
     setAnimationState("exit");
-
+    setViewType(newViewType);
     // 退出动画（250ms）
     setTimeout(() => {
-      setViewType(newViewType);
       setAnimationState("enter");
 
       // 进入动画（300ms）
@@ -158,7 +157,7 @@ function TaskPage() {
               : ""
           }`}
         >
-          {viewType === "board" ? <BoardView /> : <ListView />}
+          {viewType === "Kanban" ? <BoardView /> : <ListView />}
         </div>
 
         {type === "view" && (

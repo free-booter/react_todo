@@ -98,6 +98,7 @@ const themeConfig: ThemeConfig = {
     Segmented: {
       itemSelectedBg: "#6200ea", // @theme-primary (选中背景)
       itemSelectedColor: "#ffffff", // @text-light (选中文字)
+      itemHoverColor: "#6200ea", // @theme-primary (文字颜色)
       trackBg: "rgba(0,0,0,0.06)", // 轨道背景
       borderRadius: 12, // @border-radius-base
     },
